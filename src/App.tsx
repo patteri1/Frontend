@@ -1,5 +1,5 @@
 import './App.css'
-import { Box, Tabs, Tab, Typography, AppBar, SvgIcon } from '@mui/material'
+import { Box, Tabs, Tab, Typography, AppBar } from '@mui/material'
 import React from 'react'
 import StoragePage from './pages/StoragePage'
 import OrderPage from './pages/OrderPage'
