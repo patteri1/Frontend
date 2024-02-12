@@ -1,9 +1,13 @@
+import Page from '../components/Page'
+
 const OrderPage = () => {
     return (
-        <div>
-            <p>Tilaukset</p>
-        </div>
+        <Page>
+            <div>
+                <p>Tilaukset</p>
+            </div>
+        </Page>
     )
-    }
-    
-    export default OrderPage
+}
+
+export default OrderPage
