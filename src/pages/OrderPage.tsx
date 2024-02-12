@@ -1,11 +1,14 @@
 import OrderList from '../components/OrderList'
+import Page from '../components/Page'
 
 const OrderPage = () => {
     return (
-        <div>
-            <p>Tilaukset</p>
-            <OrderList/>
-        </div>
+        <Page>
+            <div>
+                 <p>Tilaukset</p>
+                 <OrderList/>
+            </div>
+        </Page>
     )
 }
 
