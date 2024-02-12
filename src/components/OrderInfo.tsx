@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Modal, Box, Button } from '@mui/material'
 import { useQuery, gql } from '@apollo/client'
-import { Order } from './OrderList'
 
 const GET_ORDER_BY_ID = gql`
     query Orders($orderId: Int!) {
@@ -34,18 +33,21 @@ export interface PalletType {
     amount: number
 }
 
+interface OrderInfoProps {
+    id: number
+}
 
-const OrderInfo = (props: number) => {
-    const { loading, error, data } = useQuery(GET_ORDER_BY_ID, { variables: {orderId} })
+const OrderInfo = ({ id }: OrderInfoProps) => {
+    const { loading, error, data } = useQuery(GET_ORDER_BY_ID, { variables: { orderId: id } })
     console.log(data)
 
     const [open, setOpen] = useState<boolean>(false)
-    
+
     const showModal = () => setOpen(true)
     const hideModal = () => setOpen(false)
-    
+
     if (loading) return <p>Loading...</p>
-    if (error) return (<p>Error : { error.message }</p>)
+    if (error) return (<p>Error : {error.message}</p>)
 
     // renders order's pallet types & amounts
     // const palletRows = () => {
@@ -66,6 +68,9 @@ const OrderInfo = (props: number) => {
                     <h4>Tilaustunnus</h4>
                     <p>{data.order.orderId}</p>
                     <h4>Lavat</h4>
+                    {data.order.orderRows.map((row: OrderRow) => {
+                        return <p>{row.palletType.product} x{row.amount}</p>
+                    })}
                     <h4>Tilattu</h4>
                     <p>{data.order.datetime}</p>
                     <Button
