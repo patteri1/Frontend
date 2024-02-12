@@ -1,9 +1,13 @@
+import Page from '../components/Page'
+
 const ManagementPage = () => {
     return (
-        <div>
-            <p>Hallinnointi</p>
-        </div>
+        <Page>
+            <div>
+                <p>Hallinnointi</p>
+            </div>
+        </Page>
     )
-    }
-    
-    export default ManagementPage
+}
+
+export default ManagementPage
