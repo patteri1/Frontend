@@ -1,11 +1,13 @@
-
+import Page from '../components/Page'
 
 const StoragePage = () => {
-return (
-    <div>
-        <p>Varasto</p>
-    </div>
-)
+    return (
+        <Page>
+            <div>
+                <p>Varasto</p>
+            </div>
+        </Page>
+    )
 }
 
 export default StoragePage
