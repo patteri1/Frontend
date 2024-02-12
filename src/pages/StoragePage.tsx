@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import StorageCard from './StorageCard';
-import { useQuery, gql } from '@apollo/client';
+import React, { useState, useEffect } from 'react'
+import StorageCard from './StorageCard'
+import { useQuery, gql } from '@apollo/client'
 
 interface Location {
-    id: string;
-    name: string;
-    address: string;
-    city: string;
-    postalCode: number;
-    price: number;
-    storages: Storage[];
+    id: string
+    name: string
+    address: string
+    city: string
+    postalCode: number
+    price: number
+    storages: Storage[]
 }
 interface Storage {
-    locationId: string;
-    amount: number;
+    locationId: string
+    amount: number
 }
 interface PalletType {
-    palletTypeId: string;
-    product: string;
-    amount: number;
+    palletTypeId: string
+    product: string
+    amount: number
 }
 interface LocationQueryData {
-    allLocations: Location[];
+    allLocations: Location[]
 }
 
 const GET_LOCATIONS = gql`
@@ -37,7 +37,7 @@ const GET_LOCATIONS = gql`
             }
         }
     }
-`;
+`
 /* postalCode
 city */
 const GET_PALLET_TYPES = gql`
@@ -48,42 +48,57 @@ const GET_PALLET_TYPES = gql`
             amount
         }
     }
-`;
+`
 function StoragePage() {
-    const { error, loading, data: locationData } = useQuery<LocationQueryData>(GET_LOCATIONS);
-    const { data: palletTypeData } = useQuery<{ allPalletTypes: PalletType[] }>(GET_PALLET_TYPES);
+    const {
+        error,
+        loading,
+        data: locationData,
+    } = useQuery<LocationQueryData>(GET_LOCATIONS)
+    const { data: palletTypeData } = useQuery<{ allPalletTypes: PalletType[] }>(
+        GET_PALLET_TYPES
+    )
 
-    const [storageCardsData, setStorageCardsData] = useState<{ items: { title: string; content: string }[] }[]>([]);
+    const [storageCardsData, setStorageCardsData] = useState<
+        { items: { title: string; content: string }[] }[]
+    >([])
 
     useEffect(() => {
         if (locationData && locationData.allLocations && palletTypeData) {
-            const newStorageCardsData = locationData.allLocations.map((location) => {
-                const locationItems = [
-                    { title: 'Toimipaikka', content: location.name },
-                    { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
-                    { title: 'Hinta/lavapaikka/kk', content: location.price.toString() }
-                ];
-                const palletTypeItems = palletTypeData.allPalletTypes.map(palletType => ({
-                    title: palletType.product,
-                    content: `${palletType.amount}`,
-                }));
+            const newStorageCardsData = locationData.allLocations.map(
+                (location) => {
+                    const locationItems = [
+                        { title: 'Toimipaikka', content: location.name },
+                        { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
+                        {
+                            title: 'Hinta/lavapaikka/kk',
+                            content: location.price.toString(),
+                        },
+                    ]
+                    const palletTypeItems = palletTypeData.allPalletTypes.map(
+                        (palletType) => ({
+                            title: palletType.product,
+                            content: `${palletType.amount}`,
+                        })
+                    )
 
-                return {
-                    items: [...locationItems, ...palletTypeItems],
-                };
-            });
-            setStorageCardsData(newStorageCardsData);
+                    return {
+                        items: [...locationItems, ...palletTypeItems],
+                    }
+                }
+            )
+            setStorageCardsData(newStorageCardsData)
         }
-    }, [locationData, palletTypeData]);
+    }, [locationData, palletTypeData])
 
     const handleCardUpdate = (
         index: number,
         updatedData: { title: string; content: string }[]
     ) => {
-        const newData = [...storageCardsData];
-        newData[index].items = updatedData;
-        setStorageCardsData(newData);
-    };
+        const newData = [...storageCardsData]
+        newData[index].items = updatedData
+        setStorageCardsData(newData)
+    }
 
     return (
         <div style={{ display: 'flex', gap: '16px' }}>
@@ -103,19 +118,6 @@ function StoragePage() {
                 ))
             )}
         </div>
-    );
-}
-
-export default StoragePage;
-import Page from '../components/Page'
-
-const StoragePage = () => {
-    return (
-        <Page>
-            <div>
-                <p>Varasto</p>
-            </div>
-        </Page>
     )
 }
 
