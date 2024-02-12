@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import StorageCard from './StorageCard'
+import { useState, useEffect } from 'react'
+import StorageCard from '../components/StorageCard'
 import { useQuery, gql } from '@apollo/client'
 import Page from '../components/Page'
 
