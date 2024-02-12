@@ -96,7 +96,6 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
                 <DialogContent>
                     {editedData.map((cardData, index) => (
                         <div key={index}>
-                            
                             {cardData.title === 'Toimipaikka' ||
                             cardData.title === 'Osoite' ? (
                                 <Typography
@@ -105,7 +104,7 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
                                 >
                                     {cardData.content}
                                 </Typography>
-                            ) : (
+                            ) : cardData.title !== 'Hinta/lavapaikka/kk' ? (
                                 <>
                                     <TextField
                                         margin="dense"
@@ -138,10 +137,11 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
                                         <RemoveIcon />
                                     </IconButton>
                                 </>
-                            )}
+                            ) : null}
                         </div>
                     ))}
                 </DialogContent>
+
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
                         Peruuta

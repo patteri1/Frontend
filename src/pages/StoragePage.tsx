@@ -30,8 +30,6 @@ const GET_LOCATIONS = gql`
             id
             name
             address
-            postalCode
-            city
             price
             storages {
                 locationId
@@ -40,6 +38,8 @@ const GET_LOCATIONS = gql`
         }
     }
 `;
+/* postalCode
+city */
 const GET_PALLET_TYPES = gql`
     query {
         allPalletTypes {
@@ -60,7 +60,7 @@ function StoragePage() {
             const newStorageCardsData = locationData.allLocations.map((location) => {
                 const locationItems = [
                     { title: 'Toimipaikka', content: location.name },
-                    { title: 'Osoite', content: `${location.address}, ${location.city} ${location.postalCode}` }, 
+                    { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
                     { title: 'Hinta/lavapaikka/kk', content: location.price.toString() }
                 ];
                 const palletTypeItems = palletTypeData.allPalletTypes.map(palletType => ({
