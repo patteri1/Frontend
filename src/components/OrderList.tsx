@@ -1,4 +1,3 @@
-import "./App.css";
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,11 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
+import OrderInfo from "./OrderInfo";
 
 interface Row {
   name: string;
@@ -31,17 +26,6 @@ const rows: Row[] = [
 ];
 
 export default function DenseTable() {
-  const [open, setOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState<Row | null>(null);
-
-  const handleClickOpen = (row: Row) => {
-    setSelectedRow(row);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <div>
@@ -51,6 +35,7 @@ export default function DenseTable() {
             <TableRow>
               <TableCell> Tilaaja </TableCell>
               <TableCell align="right"> Status </TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,29 +43,18 @@ export default function DenseTable() {
               <TableRow
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                onClick={() => handleClickOpen(row)}
                 style={{ cursor: "pointer" }}
               >
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
                 <TableCell align="right">{row.status}</TableCell>
+                <TableCell><OrderInfo/></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{selectedRow && selectedRow.name}</DialogTitle>
-        <DialogContent>
-          <p>Status: {selectedRow && selectedRow.status}</p>
-          <p>Tilattu: {selectedRow && selectedRow.date}</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Sulje</Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 }

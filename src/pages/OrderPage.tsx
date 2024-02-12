@@ -1,10 +1,10 @@
-import OrderInfo from '../components/OrderInfo'
+import OrderList from '../components/OrderList'
 
 const OrderPage = () => {
     return (
         <div>
             <p>Tilaukset</p>
-            <OrderInfo></OrderInfo>
+            <OrderList/>
         </div>
     )
 }

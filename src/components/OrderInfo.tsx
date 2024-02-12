@@ -46,7 +46,7 @@ const OrderInfo = () => {
 
     return (
         <div>
-            <a onClick={showModal}>Tilaus {order.orderId}</a>
+            <a onClick={showModal}>Näytä</a>
             <Modal open={open} onClose={hideModal}>
                 <Box sx={styles.box}>
                     <h4>Tilaaja</h4>
