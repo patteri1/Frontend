@@ -38,7 +38,9 @@ interface OrderInfoProps {
 }
 
 const OrderInfo = ({ id }: OrderInfoProps) => {
-    const { loading, error, data } = useQuery(GET_ORDER_BY_ID, { variables: { orderId: id } })
+    const { loading, error, data } = useQuery(GET_ORDER_BY_ID, {
+        variables: { orderId: id },
+    })
     console.log(data)
 
     const [open, setOpen] = useState<boolean>(false)
@@ -47,16 +49,7 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
     const hideModal = () => setOpen(false)
 
     if (loading) return <p>Loading...</p>
-    if (error) return (<p>Error : {error.message}</p>)
-
-    // renders order's pallet types & amounts
-    // const palletRows = () => {
-    //     return rows.map((item, index) => (
-    //         <p key={index}>
-    //             {item.product} x{item.amount}
-    //         </p>
-    //     ))
-    // }
+    if (error) return <p>Error : {error.message}</p>
 
     return (
         <div>
@@ -69,10 +62,16 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
                     <p>{data.order.orderId}</p>
                     <h4>Lavat</h4>
                     {data.order.orderRows.map((row: OrderRow) => {
-                        return <p>{row.palletType.product} x{row.amount}</p>
+                        return (
+                            <p>
+                                {row.palletType.product} x{row.amount}
+                            </p>
+                        )
                     })}
                     <h4>Tilattu</h4>
                     <p>{data.order.datetime}</p>
+                    <h4>Status</h4>
+                    <p>{data.order.status}</p>
                     <Button
                         style={{ marginTop: '10px', float: 'right' }}
                         onClick={hideModal}

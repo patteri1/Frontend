@@ -40,11 +40,11 @@ export default function OrderList() {
     const { loading, error, data } = useQuery(GET_ORDERS)
 
     if (loading) return <p>Loading...</p>
-    if (error) return (<p>Error : {error.message}</p>)
+    if (error) return <p>Error : {error.message}</p>
 
     return (
         <div>
-            <TableContainer component={Paper}>
+            <TableContainer sx={{ padding: 2 }} component={Paper}>
                 <Table
                     sx={{ minWidth: 325 }}
                     size="small"
@@ -53,13 +53,13 @@ export default function OrderList() {
                     <TableHead>
                         <TableRow>
                             <TableCell> Tilaaja </TableCell>
+                            <TableCell align="center"> Tilauspvm </TableCell>
                             <TableCell align="right"> Status </TableCell>
                             <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.allOrders.map((row: Order) =>
-                        (
+                        {data.allOrders.map((row: Order) => (
                             <TableRow
                                 key={row.orderId}
                                 sx={{
@@ -71,6 +71,9 @@ export default function OrderList() {
                             >
                                 <TableCell component="th" scope="row">
                                     {row.location.name}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {row.datetime}
                                 </TableCell>
                                 <TableCell align="right">
                                     {row.status}
