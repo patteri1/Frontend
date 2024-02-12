@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import StorageCard from './StorageCard'
 import { useQuery, gql } from '@apollo/client'
+import Page from '../components/Page'
 
 interface Location {
     id: string
@@ -101,23 +102,25 @@ function StoragePage() {
     }
 
     return (
-        <div style={{ display: 'flex', gap: '16px' }}>
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <p>Error: {error.message}</p>
-            ) : (
-                storageCardsData.map((data, index) => (
-                    <StorageCard
-                        key={index}
-                        data={data.items}
-                        onUpdate={(updatedData) =>
-                            handleCardUpdate(index, updatedData)
-                        }
-                    />
-                ))
-            )}
-        </div>
+        <Page>
+            <div style={{ display: 'flex', gap: '16px' }}>
+                {loading ? (
+                    <p>Loading...</p>
+                ) : error ? (
+                    <p>Error: {error.message}</p>
+                ) : (
+                    storageCardsData.map((data, index) => (
+                        <StorageCard
+                            key={index}
+                            data={data.items}
+                            onUpdate={(updatedData) =>
+                                handleCardUpdate(index, updatedData)
+                            }
+                        />
+                    ))
+                )}
+            </div>
+        </Page>
     )
 }
 

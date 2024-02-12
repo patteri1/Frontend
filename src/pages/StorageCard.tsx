@@ -49,7 +49,7 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
     }
 
     return (
-        <Card sx={{ minWidth: 300 }}>
+        <Card sx={{ minWidth: 300, marginTop: 10 }}>
             <CardContent>
                 {editedData.map((cardData, index) => (
                     <div key={index}>
