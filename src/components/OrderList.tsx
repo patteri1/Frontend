@@ -1,4 +1,3 @@
-import * as React from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -17,11 +16,11 @@ export interface Order {
 }
 
 interface Location {
-  id: string
-  name: string
-  address: string
-  postCode: string
-  price: number
+    id: string
+    name: string
+    address: string
+    postCode: string
+    price: number
 }
 
 const GET_ORDERS = gql`
@@ -37,12 +36,11 @@ const GET_ORDERS = gql`
     }
 `
 
-export default function DenseTable() {
+export default function OrderList() {
     const { loading, error, data } = useQuery(GET_ORDERS)
-    console.log(data)
 
     if (loading) return <p>Loading...</p>
-    if (error) return (<p>Error : { error.message }</p>)
+    if (error) return (<p>Error : {error.message}</p>)
 
     return (
         <div>
@@ -60,7 +58,8 @@ export default function DenseTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.allOrders.map((row:Order) => (
+                        {data.allOrders.map((row: Order) =>
+                        (
                             <TableRow
                                 key={row.orderId}
                                 sx={{
