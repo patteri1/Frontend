@@ -1,12 +1,31 @@
-import Locations from './components/Locations'
 import './App.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import SignInPage from './pages/SignInPage'
+import StoragePage from './pages/StoragePage'
+import OrderPage from './pages/OrderPage'
+import ManagementPage from './pages/ManagementPage'
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <SignInPage />,
+    },
+    {
+        path: '/varasto',
+        element: <StoragePage />,
+    },
+    {
+        path: '/tilaukset',
+        element: <OrderPage />,
+    },
+    {
+        path: '/hallinnointi',
+        element: <ManagementPage />,
+    },
+])
 
 function App() {
-  return (
-    // this components is for testing and learning graphql, 
-    // remove when the real stuff comes in
-    <Locations />
-  )
+    return <RouterProvider router={router} />
 }
 
 export default App
