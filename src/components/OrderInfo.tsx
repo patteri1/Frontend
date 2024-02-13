@@ -41,7 +41,6 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
     const { loading, error, data } = useQuery(GET_ORDER_BY_ID, {
         variables: { orderId: id },
     })
-    console.log(data)
 
     const [open, setOpen] = useState<boolean>(false)
 

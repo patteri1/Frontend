@@ -4,8 +4,8 @@ import Page from '../components/Page'
 const OrderPage = () => {
     return (
         <Page>
-            <div style={{ paddingTop: 20, fontSize: 20, fontWeight: 'bold' }}>
-                <p>Tilaukset</p>
+            <div style={{ paddingTop: 20 }}>
+                <p style={{ fontSize: 20, fontWeight: 'bold' }}>Tilaukset</p>
                 <OrderList />
             </div>
         </Page>
