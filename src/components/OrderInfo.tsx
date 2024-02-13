@@ -1,48 +1,54 @@
 import { useState } from 'react'
 import { Modal, Box, Button } from '@mui/material'
-import { Order, OrderRow } from '../TypeDefs'
+import { useQuery, gql } from '@apollo/client'
 
-const OrderInfo = () => {
+const GET_ORDER_BY_ID = gql`
+    query Orders($orderId: Int!) {
+        order(id: $orderId) {
+            orderId
+            datetime
+            status
+            location {
+                name
+            }
+            orderRows {
+                amount
+                palletType {
+                    product
+                }
+            }
+        }
+    }
+`
+
+export interface OrderRow {
+    orderId: number
+    palletType: PalletType
+    amount: number
+}
+
+export interface PalletType {
+    palletTypeId: number
+    product: string
+    amount: number
+}
+
+interface OrderInfoProps {
+    id: number
+}
+
+const OrderInfo = ({ id }: OrderInfoProps) => {
+    const { loading, error, data } = useQuery(GET_ORDER_BY_ID, {
+        variables: { orderId: id },
+    })
+
     const [open, setOpen] = useState<boolean>(false)
 
     const showModal = () => setOpen(true)
     const hideModal = () => setOpen(false)
 
-    // hardcoded for now: the data for order and orderRow should
-    // be passed here via the order list with the specific orderId
-    const order: Order = {
-        orderId: 1,
-        locationId: 1,
-        locationName: 'Kuljetusliike 1',
-        datetime: '01.02.2024 11:58',
-        status: 'Avattu',
-    }
-    const rows: OrderRow[] = [
-        {
-            orderId: 1,
-            product: 'Tynnyrilava',
-            amount: 10,
-        },
-        {
-            orderId: 1,
-            product: 'Lithiumakkulava',
-            amount: 5,
-        },
-        {
-            orderId: 1,
-            product: 'Pahvilaatikkolava',
-            amount: 20,
-        },
-    ]
-
-    // renders order's pallet types & amounts
-    const palletRows = () => {
-        return rows.map((item, index) => (
-            <p key={index}>
-                {item.product} x{item.amount}
-            </p>
-        ))
-    }
+    if (loading) return <p>Loading...</p>
+    if (error) return <p>Error : {error.message}</p>
 
     return (
         <div>
@@ -50,13 +56,21 @@ const OrderInfo = () => {
             <Modal open={open} onClose={hideModal}>
                 <Box sx={styles.box}>
                     <h4>Tilaaja</h4>
-                    <p>{order.locationName}</p>
+                    <p>{data.order.location.name}</p>
                     <h4>Tilaustunnus</h4>
-                    <p>{order.orderId}</p>
+                    <p>{data.order.orderId}</p>
                     <h4>Lavat</h4>
-                    {palletRows()}
+                    {data.order.orderRows.map((row: OrderRow) => {
+                        return (
+                            <p>
+                                {row.palletType.product} x{row.amount}
+                            </p>
+                        )
+                    })}
                     <h4>Tilattu</h4>
-                    <p>{order.datetime}</p>
+                    <p>{data.order.datetime}</p>
+                    <h4>Status</h4>
+                    <p>{data.order.status}</p>
                     <Button
                         style={{ marginTop: '10px', float: 'right' }}
                         onClick={hideModal}
