@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useMobileScreen } from '../hooks/useMobileScreen'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface PageProps {
     children?: React.ReactNode
@@ -30,6 +30,12 @@ function Page(props: PageProps) {
     }
 
     const path = window.location.pathname
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        window.localStorage.removeItem('AuthPayload')
+        navigate('/')
+    }
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -131,6 +137,7 @@ function Page(props: PageProps) {
                 )}
 
                 <button
+                    onClick={handleLogout}
                     style={{
                         display: 'flex',
                         flexDirection: 'row',
