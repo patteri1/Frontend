@@ -31,7 +31,6 @@ const LoginForm = () => {
         variables: { username, password },
       });
 
-      // Handle successful login
       if (result.data.login) {
         // save user info to localStorage
         window.localStorage.setItem(
@@ -41,6 +40,8 @@ const LoginForm = () => {
     }
 
     } catch (err) {
+      // TODO: Change this error handling to something nicer
+      alert('Virheellinen käyttäjätunnus tai salasana')
       console.error('Login error:', err)
     }
   }
