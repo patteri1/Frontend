@@ -1,6 +1,7 @@
 import { TextField, Button } from "@mui/material"
 import { gql, useMutation } from "@apollo/client"
 import { useState } from 'react'
+import {  useNavigate } from 'react-router-dom'
 
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
@@ -21,8 +22,8 @@ const LOGIN = gql`
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
   const [loginMutation] = useMutation(LOGIN)
+  const navigate = useNavigate()
 
   const handleLogin = async () => {
     try {
@@ -36,6 +37,7 @@ const LoginForm = () => {
         window.localStorage.setItem(
             'AuthPayload', JSON.stringify(result.data.login)
         )
+        navigate('/varasto')
     }
 
     } catch (err) {
