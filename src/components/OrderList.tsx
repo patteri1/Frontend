@@ -5,36 +5,10 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
+import { useQuery } from '@apollo/client'
 import OrderInfo from './OrderInfo'
-import { useQuery, gql } from '@apollo/client'
-
-export interface Order {
-    orderId: number
-    datetime: string
-    status: string
-    location: Location
-}
-
-interface Location {
-    id: string
-    name: string
-    address: string
-    postCode: string
-    price: number
-}
-
-const GET_ORDERS = gql`
-    query AllOrders {
-        allOrders {
-            orderId
-            datetime
-            status
-            location {
-                name
-            }
-        }
-    }
-`
+import { Order } from '../graphql/TypeDefs'
+import { GET_ORDERS } from '../graphql/Queries'
 
 export default function OrderList() {
     const { loading, error, data } = useQuery(GET_ORDERS)
