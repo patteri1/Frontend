@@ -31,3 +31,29 @@ export const GET_ORDER_BY_ID = gql`
         }
     }
 `
+
+export const GET_OPEN_ORDERS = gql`
+    query Query {
+        openOrders {
+            orderId
+            location {
+                name
+            }
+            datetime
+            status
+        }
+    }
+`
+
+export const GET_CLOSED_ORDERS = gql`
+    query Query {
+        closedOrders {
+            orderId
+            location {
+                name
+            }
+            datetime
+            status
+        }
+    }
+`

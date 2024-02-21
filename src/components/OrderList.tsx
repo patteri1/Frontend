@@ -5,17 +5,19 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { useQuery } from '@apollo/client'
+import { DocumentNode, useQuery } from '@apollo/client'
 import OrderInfo from './OrderInfo'
 import { Order } from '../graphql/TypeDefs'
-import { GET_ORDERS } from '../graphql/Queries'
 
-export default function OrderList() {
-    const { loading, error, data } = useQuery(GET_ORDERS)
+interface OrderListProps {
+    query: DocumentNode
+    orderData: string
+}
 
+export default function OrderList({ query, orderData }: OrderListProps) {
+    const { loading, error, data } = useQuery(query)
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
-
     return (
         <div>
             <TableContainer sx={{ padding: 2 }} component={Paper}>
@@ -33,7 +35,7 @@ export default function OrderList() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.allOrders.map((row: Order) => (
+                        {data[orderData].map((row: Order) => (
                             <TableRow
                                 key={row.orderId}
                                 sx={{
