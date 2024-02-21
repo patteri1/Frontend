@@ -33,7 +33,7 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
                     <h4>Lavat</h4>
                     {data.order.orderRows.map((row: OrderRow) => {
                         return (
-                            <p>
+                            <p key={row.palletType.product}>
                                 {row.palletType.product} x{row.amount}
                             </p>
                         )
