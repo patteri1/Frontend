@@ -12,14 +12,16 @@ import { Order } from '../graphql/TypeDefs'
 interface OrderListProps {
     query: DocumentNode
     orderData: string
+    title?: string
 }
 
-export default function OrderList({ query, orderData }: OrderListProps) {
+export default function OrderList({ query, orderData, title }: OrderListProps) {
     const { loading, error, data } = useQuery(query)
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
     return (
-        <div>
+        <div style={{ paddingTop: 20 }}>
+            <p style={{ fontSize: 20, fontWeight: 'bold' }}>{title}</p>
             <TableContainer sx={{ padding: 2 }} component={Paper}>
                 <Table
                     sx={{ minWidth: 325 }}
