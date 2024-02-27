@@ -16,10 +16,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 
+
+
 interface StorageCardProps {
     data: { title: string; content: string }[]
     onUpdate: (updatedData: { title: string; content: string }[]) => void
 }
+
 
 const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
     const [open, setOpen] = useState(false)

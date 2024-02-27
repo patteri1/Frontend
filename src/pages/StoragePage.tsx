@@ -15,6 +15,8 @@ interface Location {
 interface Storage {
     locationId: string
     amount: number
+    palletTypeId: string
+    palletType: PalletType
 }
 interface PalletType {
     palletTypeId: string
@@ -26,19 +28,20 @@ interface LocationQueryData {
 }
 
 const GET_LOCATIONS = gql`
-    query {
-        allLocations {
-            id
-            name
-            address
-            price
-            storages {
-                locationId
-                amount
-            }
+  query {
+    allLocations {
+      name
+      address
+      price
+      storages {
+        palletType {
+          product
+          amount
         }
+      }
     }
-`
+  }
+`;
 /* postalCode
 city */
 const GET_PALLET_TYPES = gql`
@@ -76,15 +79,17 @@ function StoragePage() {
                             content: location.price.toString(),
                         },
                     ]
-                    const palletTypeItems = palletTypeData.allPalletTypes.map(
-                        (palletType) => ({
-                            title: palletType.product,
-                            content: `${palletType.amount}`,
-                        })
-                    )
+                    const storageItems = location.storages.map((storage) => {
+                        const palletType = storage.palletType
+                        return {
+                            title: palletType && palletType.product ? palletType.product : 'Unknown Product',
+                            content: palletType && palletType.amount ? `${palletType.amount}` : 'Unknown Amount',
+                          };
+                    })
+                    
 
                     return {
-                        items: [...locationItems, ...palletTypeItems],
+                        items: [...locationItems, ...storageItems],
                     }
                 }
             )

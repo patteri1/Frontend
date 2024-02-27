@@ -1,0 +1,7 @@
+mutation AddAmountToStorage($locationId: Int!, $amount: Int!) {
+  addAmountToStorage(locationId: $locationId, amount: $amount) {
+    id
+    amount
+    // Add other fields you want to fetch after the mutation
+  }
+}
