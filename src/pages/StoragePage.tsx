@@ -39,8 +39,7 @@ const GET_LOCATIONS = gql`
         }
     }
 `
-/* postalCode
-city */
+
 const GET_PALLET_TYPES = gql`
     query {
         allPalletTypes {
@@ -50,6 +49,7 @@ const GET_PALLET_TYPES = gql`
         }
     }
 `
+
 function StoragePage() {
     const {
         error,
@@ -69,8 +69,6 @@ function StoragePage() {
             const newStorageCardsData = locationData.allLocations.map(
                 (location) => {
                     const locationItems = [
-                        { title: 'Toimipaikka', content: location.name },
-                        { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
                         {
                             title: 'Hinta/lavapaikka/kk',
                             content: location.price.toString(),
@@ -84,7 +82,11 @@ function StoragePage() {
                     )
 
                     return {
-                        items: [...locationItems, ...palletTypeItems],
+                        items: [
+                            { title: 'Toimipaikka', content: location.name },
+                            ...locationItems,
+                            ...palletTypeItems,
+                        ],
                     }
                 }
             )
@@ -113,6 +115,11 @@ function StoragePage() {
                         <StorageCard
                             key={index}
                             data={data.items}
+                            locationName={
+                                data.items.find(
+                                    (item) => item.title === 'Toimipaikka'
+                                )?.content || ''
+                            }
                             onUpdate={(updatedData) =>
                                 handleCardUpdate(index, updatedData)
                             }
