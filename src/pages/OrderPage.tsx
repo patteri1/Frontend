@@ -4,6 +4,8 @@ import Page from '../components/Page'
 import OrderForm from '../components/OrderForm'
 import NewOrderButton from '../components/NewOrderButton'
 import Dialog from '@mui/material/Dialog'
+import { GET_OPEN_ORDERS, GET_CLOSED_ORDERS } from '../graphql/Queries'
+import { useMobileScreen } from '../hooks/useMobileScreen'
 
 const OrderPage = () => {
     const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
@@ -15,6 +17,7 @@ const OrderPage = () => {
     const closeOrderForm = () => {
         setIsOrderFormOpen(false)
     }
+    const isMobile = useMobileScreen()
 
     return (
         <Page>
@@ -24,18 +27,20 @@ const OrderPage = () => {
                 <Dialog open={isOrderFormOpen} onClose={closeOrderForm}>
                     <OrderForm onClose={closeOrderForm} />
                 </Dialog>
-              <div style={!isMobile ? { display: 'flex', gap: 50 } : undefined}>
-                <OrderList
-                    title="Aktiiviset Tilaukset"
-                    query={GET_OPEN_ORDERS}
-                    orderData="openOrders"
-                />
-                <OrderList
-                    title="Käsitellyt Tilaukset"
-                    query={GET_CLOSED_ORDERS}
-                    orderData="closedOrders"
-                />
-              </div>
+                <div
+                    style={!isMobile ? { display: 'flex', gap: 50 } : undefined}
+                >
+                    <OrderList
+                        title="Aktiiviset Tilaukset"
+                        query={GET_OPEN_ORDERS}
+                        orderData="openOrders"
+                    />
+                    <OrderList
+                        title="Käsitellyt Tilaukset"
+                        query={GET_CLOSED_ORDERS}
+                        orderData="closedOrders"
+                    />
+                </div>
             </div>
         </Page>
     )
