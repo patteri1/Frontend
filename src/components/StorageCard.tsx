@@ -11,34 +11,59 @@ import {
     DialogActions,
     IconButton,
     TextField,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
 } from '@mui/material'
 
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 
-
-
 interface StorageCardProps {
     data: { title: string; content: string }[]
+    locationName: string
     onUpdate: (updatedData: { title: string; content: string }[]) => void
 }
 
-
-const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
+const StorageCard: React.FC<StorageCardProps> = ({
+    data,
+    locationName,
+    onUpdate,
+}) => {
     const [open, setOpen] = useState(false)
     const [editedData, setEditedData] =
         useState<{ title: string; content: string }[]>(data)
-
+    const nonNegative = (amount: number) => {
+        return Math.max(amount, 0)
+    }
     const handleClickOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
     const handleCancel = () => {
         setEditedData(data)
         setOpen(false)
     }
+
     const handleAmountChange = (index: number, amountChange: number) => {
         const newAmount = parseInt(editedData[index].content) + amountChange
         const newData = [...editedData]
-        newData[index] = { ...newData[index], content: newAmount.toString() }
+        const updatedAmount = nonNegative(newAmount)
+
+        newData[index] = {
+            ...newData[index],
+            content: updatedAmount.toString(),
+        }
+        setEditedData(newData)
+    }
+    const handleAmountChangeByTen = (index: number, step: number) => {
+        const newAmount = parseInt(editedData[index].content) + step * 10
+        const newData = [...editedData]
+        const updatedAmount = nonNegative(newAmount)
+        newData[index] = {
+            ...newData[index],
+            content: updatedAmount.toString(),
+        }
         setEditedData(newData)
     }
     const handleInputChange = (index: number, newValue: string) => {
@@ -46,6 +71,7 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
         newData[index] = { ...newData[index], content: newValue }
         setEditedData(newData)
     }
+
     const handleSave = () => {
         onUpdate(editedData)
         handleClose()
@@ -54,33 +80,33 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
     return (
         <Card sx={{ minWidth: 300, marginTop: 10 }}>
             <CardContent>
-                {editedData.map((cardData, index) => (
-                    <div key={index}>
-                        <Typography sx={{ fontSize: 20 }} variant="h1">
-                            <b>{cardData.title}</b>
-                        </Typography>
-                        {cardData.title === 'Toimipaikka' ? (
-                            <Typography
-                                sx={{ fontSize: 14, marginBottom: 1 }}
-                                variant="body1"
-                            >
-                                {cardData.content}
-                            </Typography>
-                        ) : (
-                            <TextField
-                                margin="dense"
-                                id={index.toString()}
-                                type="text"
-                                fullWidth
-                                value={cardData.content}
-                                InputProps={{ readOnly: true }} // Set readOnly to true to make it uneditable
-                                onChange={(e) =>
-                                    handleInputChange(index, e.target.value)
-                                }
-                            />
-                        )}
-                    </div>
-                ))}
+                <TableContainer>
+                    <Table>
+                        <b> {locationName}</b>
+                        <TableBody>
+                            {editedData.map((cardData, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        {cardData.title !== 'Toimipaikka' && (
+                                            <>{cardData.title}</>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {cardData.title !== 'Toimipaikka' && (
+                                            <>
+                                                {cardData.content}
+                                                {cardData.title !==
+                                                    'Hinta/lavapaikka/kk' && (
+                                                    <></>
+                                                )}
+                                            </>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </CardContent>
             <CardActions>
                 <Button
@@ -97,54 +123,87 @@ const StorageCard: React.FC<StorageCardProps> = ({ data, onUpdate }) => {
                     Muokkaa lavojen määrää
                 </DialogTitle>
                 <DialogContent>
-                    {editedData.map((cardData, index) => (
-                        <div key={index}>
-                            {cardData.title === 'Toimipaikka' ||
-                            cardData.title === 'Osoite' ? (
-                                <Typography
-                                    sx={{ fontSize: 20, marginBottom: 1 }}
-                                    variant="body1"
-                                >
-                                    {cardData.content}
-                                </Typography>
-                            ) : cardData.title !== 'Hinta/lavapaikka/kk' ? (
-                                <>
-                                    <TextField
-                                        margin="dense"
-                                        id={index.toString()}
-                                        label={cardData.title}
-                                        type="text"
-                                        fullWidth
-                                        value={cardData.content}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <IconButton
-                                        size="small"
-                                        onClick={() =>
-                                            handleAmountChange(index, 1)
-                                        }
-                                    >
-                                        <AddIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        size="small"
-                                        onClick={() =>
-                                            handleAmountChange(index, -1)
-                                        }
-                                    >
-                                        <RemoveIcon />
-                                    </IconButton>
-                                </>
-                            ) : null}
-                        </div>
-                    ))}
-                </DialogContent>
+                    <TableContainer>
+                        <Table>
+                            <TableBody>
+                                {editedData.map((cardData, index) => (
+                                    <TableRow key={index}>
+                                        {cardData.title === 'Toimipaikka' ? (
+                                            <b>
+                                                {' '}
+                                                <Typography variant="inherit">
+                                                    {cardData.content}
+                                                </Typography>
+                                            </b>
+                                        ) : cardData.title !==
+                                          'Hinta/lavapaikka/kk' ? (
+                                            <>
+                                                <TextField
+                                                    margin="normal"
+                                                    label={cardData.title}
+                                                    type="text"
+                                                    fullWidth
+                                                    value={cardData.content}
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            index,
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        handleAmountChange(
+                                                            index,
+                                                            1
+                                                        )
+                                                    }
+                                                >
+                                                    <AddIcon />
+                                                </IconButton>
 
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        handleAmountChange(
+                                                            index,
+                                                            -1
+                                                        )
+                                                    }
+                                                >
+                                                    <RemoveIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        handleAmountChangeByTen(
+                                                            index,
+                                                            1
+                                                        )
+                                                    }
+                                                >
+                                                    +10
+                                                </IconButton>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        handleAmountChangeByTen(
+                                                            index,
+                                                            -1
+                                                        )
+                                                    }
+                                                >
+                                                    -10
+                                                </IconButton>
+                                            </>
+                                        ) : null}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
                         Peruuta

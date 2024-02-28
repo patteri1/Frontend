@@ -118,6 +118,11 @@ function StoragePage() {
                         <StorageCard
                             key={index}
                             data={data.items}
+                            locationName={
+                                data.items.find(
+                                    (item) => item.title === 'Toimipaikka'
+                                )?.content || ''
+                            }
                             onUpdate={(updatedData) =>
                                 handleCardUpdate(index, updatedData)
                             }
