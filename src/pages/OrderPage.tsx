@@ -1,13 +1,30 @@
+import { useState } from 'react'
 import OrderList from '../components/OrderList'
 import Page from '../components/Page'
-import { useMobileScreen } from '../hooks/useMobileScreen'
-import { GET_OPEN_ORDERS, GET_CLOSED_ORDERS } from '../graphql/Queries'
+import OrderForm from '../components/OrderForm'
+import NewOrderButton from '../components/NewOrderButton'
+import Dialog from '@mui/material/Dialog'
 
 const OrderPage = () => {
-    const isMobile = useMobileScreen()
+    const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
+
+    const openOrderForm = () => {
+        setIsOrderFormOpen(true)
+    }
+
+    const closeOrderForm = () => {
+        setIsOrderFormOpen(false)
+    }
+
     return (
         <Page>
-            <div style={!isMobile ? { display: 'flex', gap: 50 } : undefined}>
+            <div style={{ paddingTop: 20 }}>
+                <p style={{ fontSize: 20, fontWeight: 'bold' }}>Tilaukset</p>
+                <NewOrderButton onClick={openOrderForm} />
+                <Dialog open={isOrderFormOpen} onClose={closeOrderForm}>
+                    <OrderForm onClose={closeOrderForm} />
+                </Dialog>
+              <div style={!isMobile ? { display: 'flex', gap: 50 } : undefined}>
                 <OrderList
                     title="Aktiiviset Tilaukset"
                     query={GET_OPEN_ORDERS}
@@ -18,6 +35,7 @@ const OrderPage = () => {
                     query={GET_CLOSED_ORDERS}
                     orderData="closedOrders"
                 />
+              </div>
             </div>
         </Page>
     )
