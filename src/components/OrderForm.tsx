@@ -13,6 +13,7 @@ interface OrderFormProps {
 
 const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
     const [orderId] = useState<number>(0)
+    const [location, setLocation] = useState<string>('')
     const [currentDate, setCurrentDate] = useState<string>('')
     const [paristolaatikko, setParistolaatikko] = useState<number>(0)
     const [litiumlaatikko, setLitiumlaatikko] = useState<number>(0)
@@ -22,6 +23,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
         event.preventDefault()
         console.log('Form submitted:', {
             orderId,
+            location,
             currentDate,
             paristolaatikko,
             litiumlaatikko,
@@ -67,6 +69,28 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         value={currentDate}
                         onChange={() => {}}
                     />
+                    <TextField
+                        select
+                        required
+                        margin="dense"
+                        id="location"
+                        label="Tilaaja"
+                        fullWidth
+                        value={location}
+                        onChange={(e) => setLocation(String(e.target.value))}
+                    >
+                        {[
+                            'Kuljetusliike 1',
+                            'Kuljetusliike 2',
+                            'Kuljetusliike 3',
+                            'Kuljetusliike 4',
+                        ].map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
                     <TextField
                         required
                         margin="dense"
