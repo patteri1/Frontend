@@ -1,37 +1,8 @@
 import { useState } from 'react'
 import { Modal, Box, Button } from '@mui/material'
-import { useQuery, gql } from '@apollo/client'
-
-const GET_ORDER_BY_ID = gql`
-    query Orders($orderId: Int!) {
-        order(id: $orderId) {
-            orderId
-            datetime
-            status
-            location {
-                name
-            }
-            orderRows {
-                amount
-                palletType {
-                    product
-                }
-            }
-        }
-    }
-`
-
-export interface OrderRow {
-    orderId: number
-    palletType: PalletType
-    amount: number
-}
-
-export interface PalletType {
-    palletTypeId: number
-    product: string
-    amount: number
-}
+import { useQuery } from '@apollo/client'
+import { GET_ORDER_BY_ID } from '../graphql/Queries'
+import { OrderRow } from '../graphql/TypeDefs'
 
 interface OrderInfoProps {
     id: number
@@ -62,7 +33,7 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
                     <h4>Lavat</h4>
                     {data.order.orderRows.map((row: OrderRow) => {
                         return (
-                            <p>
+                            <p key={row.palletType.product}>
                                 {row.palletType.product} x{row.amount}
                             </p>
                         )

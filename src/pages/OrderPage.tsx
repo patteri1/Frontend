@@ -24,7 +24,18 @@ const OrderPage = () => {
                 <Dialog open={isOrderFormOpen} onClose={closeOrderForm}>
                     <OrderForm onClose={closeOrderForm} />
                 </Dialog>
-                <OrderList />
+              <div style={!isMobile ? { display: 'flex', gap: 50 } : undefined}>
+                <OrderList
+                    title="Aktiiviset Tilaukset"
+                    query={GET_OPEN_ORDERS}
+                    orderData="openOrders"
+                />
+                <OrderList
+                    title="Käsitellyt Tilaukset"
+                    query={GET_CLOSED_ORDERS}
+                    orderData="closedOrders"
+                />
+              </div>
             </div>
         </Page>
     )
