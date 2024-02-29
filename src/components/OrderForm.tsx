@@ -6,30 +6,56 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
 import MenuItem from '@mui/material/MenuItem'
+import { useMutation, gql } from '@apollo/client'
 
 interface OrderFormProps {
     onClose: () => void
 }
 
+const ADD_ORDER = gql`
+    mutation AddOrder($input: AddOrderInput!) {
+        addOrder(input: $input) {
+            location {
+                id
+            }
+            datetime
+            status
+        }
+    }
+`
+
 const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
-    const [orderId] = useState<number>(0)
-    const [location, setLocation] = useState<string>('')
-    const [currentDate, setCurrentDate] = useState<string>('')
+    const [locationId, setLocationId] = useState<number>(1)
+    const [datetime, setDatetime] = useState<string>('')
     const [paristolaatikko, setParistolaatikko] = useState<number>(0)
     const [litiumlaatikko, setLitiumlaatikko] = useState<number>(0)
     const [status, setStatus] = useState<string>('Avattu')
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const [addOrder] = useMutation(ADD_ORDER)
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        console.log('Form submitted:', {
-            orderId,
-            location,
-            currentDate,
-            paristolaatikko,
-            litiumlaatikko,
-            status,
-        })
-        onClose()
+
+        try {
+            const { data } = await addOrder({
+                variables: {
+                    input: {
+                        locationId,
+                        datetime,
+                        status,
+                        orderRows: [
+                            { palletTypeId: 1, amount: paristolaatikko },
+                            { palletTypeId: 2, amount: litiumlaatikko },
+                        ],
+                    },
+                },
+            })
+
+            console.log('Order added:', data.addOrder)
+            onClose()
+        } catch (error) {
+            console.error('Error adding order:', error)
+        }
     }
 
     const getCurrentDate = () => {
@@ -49,7 +75,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
     }
 
     React.useEffect(() => {
-        setCurrentDate(getCurrentDate())
+        setDatetime(getCurrentDate())
     }, [])
 
     return (
@@ -57,40 +83,32 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
             <DialogTitle>Uusi Tilaus</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
-                    <input
-                        type="hidden"
-                        id="orderId"
-                        value={orderId}
-                        onChange={() => {}}
-                    />
-                    <input
-                        type="hidden"
-                        id="currentDate"
-                        value={currentDate}
-                        onChange={() => {}}
-                    />
                     <TextField
                         select
                         required
                         margin="dense"
-                        id="location"
+                        id="locationId"
                         label="Tilaaja"
                         fullWidth
-                        value={location}
-                        onChange={(e) => setLocation(String(e.target.value))}
+                        value={locationId}
+                        onChange={(e) => setLocationId(Number(e.target.value))}
                     >
-                        {[
-                            'Kuljetusliike 1',
-                            'Kuljetusliike 2',
-                            'Kuljetusliike 3',
-                            'Kuljetusliike 4',
-                        ].map((option) => (
+                        {[1, 2, 3, 4].map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
                             </MenuItem>
                         ))}
                     </TextField>
-
+                    <TextField
+                        required
+                        margin="dense"
+                        id="datetime"
+                        label="Päivämäärä"
+                        type="date"
+                        fullWidth
+                        value={datetime}
+                        onChange={(e) => setDatetime(e.target.value)}
+                    />
                     <TextField
                         required
                         margin="dense"
