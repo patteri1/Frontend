@@ -1,3 +1,4 @@
+// StoragePage.tsx
 import { useState, useEffect } from 'react'
 import StorageCard from '../components/StorageCard'
 import { useQuery, gql } from '@apollo/client'
@@ -8,13 +9,15 @@ interface Location {
     name: string
     address: string
     city: string
-    postalCode: number
+    postCode: number
     price: number
     storages: Storage[]
 }
 interface Storage {
     locationId: string
     amount: number
+    palletTypeId: string
+    palletType: PalletType
 }
 interface PalletType {
     palletTypeId: string
@@ -28,18 +31,22 @@ interface LocationQueryData {
 const GET_LOCATIONS = gql`
     query {
         allLocations {
-            id
             name
             address
             price
+            city
+            postCode
             storages {
-                locationId
-                amount
+                palletType {
+                    product
+                    amount
+                }
             }
         }
     }
 `
-
+/* postalCode
+city */
 const GET_PALLET_TYPES = gql`
     query {
         allPalletTypes {
@@ -49,7 +56,6 @@ const GET_PALLET_TYPES = gql`
         }
     }
 `
-
 function StoragePage() {
     const {
         error,
@@ -69,24 +75,32 @@ function StoragePage() {
             const newStorageCardsData = locationData.allLocations.map(
                 (location) => {
                     const locationItems = [
+                        { title: 'Toimipaikka', content: location.name },
+                        {
+                            title: 'Osoite',
+                            content: `${location.address} ${location.city} ${location.postCode}`,
+                        },
                         {
                             title: 'Hinta/lavapaikka/kk',
                             content: location.price.toString(),
                         },
                     ]
-                    const palletTypeItems = palletTypeData.allPalletTypes.map(
-                        (palletType) => ({
-                            title: palletType.product,
-                            content: `${palletType.amount}`,
-                        })
-                    )
+                    const storageItems = location.storages.map((storage) => {
+                        const palletType = storage.palletType
+                        return {
+                            title:
+                                palletType && palletType.product
+                                    ? palletType.product
+                                    : 'Unknown Product',
+                            content:
+                                palletType && palletType.amount
+                                    ? `${palletType.amount}`
+                                    : 'Unknown Amount',
+                        }
+                    })
 
                     return {
-                        items: [
-                            { title: 'Toimipaikka', content: location.name },
-                            ...locationItems,
-                            ...palletTypeItems,
-                        ],
+                        items: [...locationItems, ...storageItems],
                     }
                 }
             )
@@ -118,6 +132,11 @@ function StoragePage() {
                             locationName={
                                 data.items.find(
                                     (item) => item.title === 'Toimipaikka'
+                                )?.content || ''
+                            }
+                            address={
+                                data.items.find(
+                                    (item) => item.title === 'Osoite'
                                 )?.content || ''
                             }
                             onUpdate={(updatedData) =>

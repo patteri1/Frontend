@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Card,
     CardContent,
@@ -24,37 +24,56 @@ import RemoveIcon from '@mui/icons-material/Remove'
 interface StorageCardProps {
     data: { title: string; content: string }[]
     locationName: string
+    address: string // Add address to props
     onUpdate: (updatedData: { title: string; content: string }[]) => void
 }
 
 const StorageCard: React.FC<StorageCardProps> = ({
-    data,
+    data: originalData,
     locationName,
+    address,
     onUpdate,
 }) => {
     const [open, setOpen] = useState(false)
-    const [editedData, setEditedData] =
-        useState<{ title: string; content: string }[]>(data)
+    const [editedData, setEditedData] = useState<
+        { title: string; content: string }[]
+    >([])
     const nonNegative = (amount: number) => {
         return Math.max(amount, 0)
     }
+
+    useEffect(() => {
+        setEditedData(originalData.filter((item) => item.title !== 'Osoite'))
+    }, [originalData])
+
     const handleClickOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
     const handleCancel = () => {
-        setEditedData(data)
+        setEditedData(originalData.filter((item) => item.title !== 'Osoite'))
         setOpen(false)
     }
 
     const handleAmountChange = (index: number, amountChange: number) => {
         const newAmount = parseInt(editedData[index].content) + amountChange
-        const newData = [...editedData]
         const updatedAmount = nonNegative(newAmount)
 
+        const newData = [...editedData]
         newData[index] = {
             ...newData[index],
             content: updatedAmount.toString(),
         }
         setEditedData(newData)
+    }
+
+    const handleInputChange = (index: number, newValue: string) => {
+        const newData = [...editedData]
+        newData[index] = { ...newData[index], content: newValue }
+        setEditedData(newData)
+    }
+
+    const handleSave = () => {
+        onUpdate(originalData)
+        handleClose()
     }
     const handleAmountChangeByTen = (index: number, step: number) => {
         const newAmount = parseInt(editedData[index].content) + step * 10
@@ -66,23 +85,15 @@ const StorageCard: React.FC<StorageCardProps> = ({
         }
         setEditedData(newData)
     }
-    const handleInputChange = (index: number, newValue: string) => {
-        const newData = [...editedData]
-        newData[index] = { ...newData[index], content: newValue }
-        setEditedData(newData)
-    }
-
-    const handleSave = () => {
-        onUpdate(editedData)
-        handleClose()
-    }
-
     return (
         <Card sx={{ minWidth: 300, marginTop: 10 }}>
             <CardContent>
+                <Typography variant="h6">{locationName}</Typography>
+                <Typography variant="body1" color="textSecondary">
+                    {address}
+                </Typography>
                 <TableContainer>
                     <Table>
-                        <b> {locationName}</b>
                         <TableBody>
                             {editedData.map((cardData, index) => (
                                 <TableRow key={index}>
@@ -130,7 +141,6 @@ const StorageCard: React.FC<StorageCardProps> = ({
                                     <TableRow key={index}>
                                         {cardData.title === 'Toimipaikka' ? (
                                             <b>
-                                                {' '}
                                                 <Typography variant="inherit">
                                                     {cardData.content}
                                                 </Typography>
