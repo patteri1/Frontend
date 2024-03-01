@@ -4,7 +4,7 @@ export const GET_ORDERS = gql`
     query AllOrders {
         allOrders {
             orderId
-            datetime
+            createdAt
             status
             location {
                 name
@@ -17,7 +17,7 @@ export const GET_ORDER_BY_ID = gql`
     query Order($orderId: Int!) {
         order(id: $orderId) {
             orderId
-            datetime
+            createdAt
             status
             location {
                 name
@@ -39,7 +39,7 @@ export const GET_OPEN_ORDERS = gql`
             location {
                 name
             }
-            datetime
+            createdAt
             status
         }
     }
@@ -52,7 +52,7 @@ export const GET_CLOSED_ORDERS = gql`
             location {
                 name
             }
-            datetime
+            createdAt
             status
         }
     }

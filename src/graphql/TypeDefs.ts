@@ -8,7 +8,7 @@ export interface Location {
 
 export interface Order {
     orderId: number
-    datetime: string
+    createdAt: string
     status: string
     location: Location
 }

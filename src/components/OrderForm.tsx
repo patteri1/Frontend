@@ -10,6 +10,7 @@ import { useMutation, gql } from '@apollo/client'
 
 interface OrderFormProps {
     onClose: () => void
+    onOrderSuccess: () => void
 }
 
 const ADD_ORDER = gql`
@@ -18,7 +19,6 @@ const ADD_ORDER = gql`
             location {
                 id
             }
-            datetime
             status
         }
     }
@@ -26,7 +26,6 @@ const ADD_ORDER = gql`
 
 const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
     const [locationId, setLocationId] = useState<number>(1)
-    const [datetime, setDatetime] = useState<string>('')
     const [paristolaatikko, setParistolaatikko] = useState<number>(0)
     const [litiumlaatikko, setLitiumlaatikko] = useState<number>(0)
     const [status, setStatus] = useState<string>('Avattu')
@@ -41,7 +40,6 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                 variables: {
                     input: {
                         locationId,
-                        datetime,
                         status,
                         orderRows: [
                             { palletTypeId: 1, amount: paristolaatikko },
@@ -58,26 +56,6 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
         }
     }
 
-    const getCurrentDate = () => {
-        const date = new Date()
-        const year = date.getFullYear()
-        let month = String(date.getMonth() + 1)
-        let day = String(date.getDate())
-
-        if (month.length === 1) {
-            month = '0' + month
-        }
-        if (day.length === 1) {
-            day = '0' + day
-        }
-
-        return `${year}-${month}-${day}`
-    }
-
-    React.useEffect(() => {
-        setDatetime(getCurrentDate())
-    }, [])
-
     return (
         <Dialog open={true} onClose={onClose}>
             <DialogTitle>Uusi Tilaus</DialogTitle>
@@ -93,22 +71,12 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         value={locationId}
                         onChange={(e) => setLocationId(Number(e.target.value))}
                     >
-                        {[1, 2, 3, 4].map((option) => (
+                        {[1, 2, 3].map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
                             </MenuItem>
                         ))}
                     </TextField>
-                    <TextField
-                        required
-                        margin="dense"
-                        id="datetime"
-                        label="Päivämäärä"
-                        type="date"
-                        fullWidth
-                        value={datetime}
-                        onChange={(e) => setDatetime(e.target.value)}
-                    />
                     <TextField
                         required
                         margin="dense"

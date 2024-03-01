@@ -51,7 +51,7 @@ export default function OrderList({ query, orderData, title }: OrderListProps) {
                                     {row.location.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row.datetime}
+                                    {row.createdAt}
                                 </TableCell>
                                 <TableCell align="right">
                                     {row.status}

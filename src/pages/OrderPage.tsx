@@ -19,13 +19,18 @@ const OrderPage = () => {
     }
     const isMobile = useMobileScreen()
 
+    const handleOrderSuccess = () => {}
+
     return (
         <Page>
             <div style={{ paddingTop: 20 }}>
                 <p style={{ fontSize: 20, fontWeight: 'bold' }}>Tilaukset</p>
                 <NewOrderButton onClick={openOrderForm} />
                 <Dialog open={isOrderFormOpen} onClose={closeOrderForm}>
-                    <OrderForm onClose={closeOrderForm} />
+                    <OrderForm
+                        onClose={closeOrderForm}
+                        onOrderSuccess={handleOrderSuccess}
+                    />
                 </Dialog>
                 <div
                     style={!isMobile ? { display: 'flex', gap: 50 } : undefined}
