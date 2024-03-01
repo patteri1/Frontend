@@ -57,3 +57,13 @@ export const GET_CLOSED_ORDERS = gql`
         }
     }
 `
+export const ADD_ORDER = gql`
+    mutation AddOrder($input: AddOrderInput!) {
+        addOrder(input: $input) {
+            location {
+                id
+            }
+            status
+        }
+    }
+`

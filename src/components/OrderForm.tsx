@@ -6,23 +6,13 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
 import MenuItem from '@mui/material/MenuItem'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import { ADD_ORDER } from '../graphql/Queries'
 
 interface OrderFormProps {
     onClose: () => void
     onOrderSuccess: () => void
 }
-
-const ADD_ORDER = gql`
-    mutation AddOrder($input: AddOrderInput!) {
-        addOrder(input: $input) {
-            location {
-                id
-            }
-            status
-        }
-    }
-`
 
 const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
     const [locationId, setLocationId] = useState<number>(1)
