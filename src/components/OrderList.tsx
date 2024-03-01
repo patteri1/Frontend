@@ -15,6 +15,12 @@ interface OrderListProps {
     title?: string
 }
 
+const convertDate = (d: string) => {
+    const date = new Date(Number(d)).toString()
+
+    return date
+}
+
 export default function OrderList({ query, orderData, title }: OrderListProps) {
     const { loading, error, data } = useQuery(query)
     if (loading) return <p>Loading...</p>
@@ -51,7 +57,7 @@ export default function OrderList({ query, orderData, title }: OrderListProps) {
                                     {row.location.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row.createdAt}
+                                    {convertDate(row.createdAt)}
                                 </TableCell>
                                 <TableCell align="right">
                                     {row.status}
