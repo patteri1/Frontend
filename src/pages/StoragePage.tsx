@@ -45,8 +45,7 @@ const GET_LOCATIONS = gql`
         }
     }
 `
-/* postalCode
-city */
+
 const GET_PALLET_TYPES = gql`
     query {
         allPalletTypes {
