@@ -16,8 +16,8 @@ interface OrderFormProps {
 
 const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
     const [locationId, setLocationId] = useState<number>(1)
-    const [paristolaatikko, setParistolaatikko] = useState<number>(0)
-    const [litiumlaatikko, setLitiumlaatikko] = useState<number>(0)
+    const [paristolaatikko, setParistolaatikko] = useState<string>('')
+    const [litiumlaatikko, setLitiumlaatikko] = useState<string>('')
     const [status, setStatus] = useState<string>('Avattu')
 
     const [addOrder] = useMutation(ADD_ORDER)
@@ -75,9 +75,14 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         type="number"
                         fullWidth
                         value={paristolaatikko}
-                        onChange={(e) =>
-                            setParistolaatikko(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const value = e.target.value.trim()
+                            if (!isNaN(Number(value))) {
+                                setParistolaatikko(value)
+                            } else {
+                                setParistolaatikko('')
+                            }
+                        }}
                     />
                     <TextField
                         required
@@ -87,9 +92,14 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         type="number"
                         fullWidth
                         value={litiumlaatikko}
-                        onChange={(e) =>
-                            setLitiumlaatikko(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const value = e.target.value.trim()
+                            if (!isNaN(Number(value))) {
+                                setLitiumlaatikko(value)
+                            } else {
+                                setLitiumlaatikko('')
+                            }
+                        }}
                     />
                     <TextField
                         select
