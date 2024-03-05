@@ -9,6 +9,7 @@ import { useMobileScreen } from '../hooks/useMobileScreen'
 
 const OrderPage = () => {
     const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
+    const [orderListKey, setOrderListKey] = useState(0)
 
     const openOrderForm = () => {
         setIsOrderFormOpen(true)
@@ -19,7 +20,9 @@ const OrderPage = () => {
     }
     const isMobile = useMobileScreen()
 
-    const handleOrderSuccess = () => {}
+    const handleOrderSuccess = () => {
+        setOrderListKey((prevKey) => prevKey + 1)
+    }
 
     return (
         <Page>
@@ -36,11 +39,13 @@ const OrderPage = () => {
                     style={!isMobile ? { display: 'flex', gap: 50 } : undefined}
                 >
                     <OrderList
+                        key={`openOrders-${orderListKey}`}
                         title="Aktiiviset Tilaukset"
                         query={GET_OPEN_ORDERS}
                         orderData="openOrders"
                     />
                     <OrderList
+                        key={`closedOrders-${orderListKey}`}
                         title="Käsitellyt Tilaukset"
                         query={GET_CLOSED_ORDERS}
                         orderData="closedOrders"

@@ -14,10 +14,10 @@ interface OrderFormProps {
     onOrderSuccess: () => void
 }
 
-const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
+const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
     const [locationId, setLocationId] = useState<number>(1)
-    const [paristolaatikko, setParistolaatikko] = useState<string>('')
-    const [litiumlaatikko, setLitiumlaatikko] = useState<string>('')
+    const [paristolaatikko, setParistolaatikko] = useState<number>()
+    const [litiumlaatikko, setLitiumlaatikko] = useState<number>()
     const [status, setStatus] = useState<string>('Avattu')
 
     const [addOrder] = useMutation(ADD_ORDER)
@@ -41,6 +41,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
 
             console.log('Order added:', data.addOrder)
             onClose()
+            onOrderSuccess()
         } catch (error) {
             console.error('Error adding order:', error)
         }
@@ -76,12 +77,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         fullWidth
                         value={paristolaatikko}
                         onChange={(e) => {
-                            const value = e.target.value.trim()
-                            if (!isNaN(Number(value))) {
-                                setParistolaatikko(value)
-                            } else {
-                                setParistolaatikko('')
-                            }
+                            const value = e.target.value
+                            setParistolaatikko(
+                                value ? Number(value) : undefined
+                            )
                         }}
                     />
                     <TextField
@@ -93,14 +92,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose }) => {
                         fullWidth
                         value={litiumlaatikko}
                         onChange={(e) => {
-                            const value = e.target.value.trim()
-                            if (!isNaN(Number(value))) {
-                                setLitiumlaatikko(value)
-                            } else {
-                                setLitiumlaatikko('')
-                            }
+                            const value = e.target.value
+                            setLitiumlaatikko(value ? Number(value) : undefined)
                         }}
                     />
+
                     <TextField
                         select
                         required
