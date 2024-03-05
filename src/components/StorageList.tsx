@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import StorageCard from './StorageCard'
 import { useQuery } from '@apollo/client'
 import { GET_LOCATIONS} from '../graphql/Queries'
-import { LocationQueryData, PalletType } from '../graphql/TypeDefs'
+import { LocationQueryData } from '../graphql/TypeDefs'
 import { useMutation } from '@apollo/client';
 import {SET_AMOUNT_TO_STORAGE } from '../graphql/mutations';
 
@@ -17,7 +17,7 @@ function StorageList() {
         { items: { title: string; content: string }[] }[]
     >([])
 
-    const [locationIds, setLocationIds] = useState<number[]>([])
+    const [locationIds] = useState<number[]>([])
 
     const [setAmountToStorage] = useMutation(SET_AMOUNT_TO_STORAGE);
 

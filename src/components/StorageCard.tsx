@@ -36,7 +36,6 @@ const StorageCard: React.FC<StorageCardProps> = ({
     locationName,
     address,
     onUpdate,
-    onStorageUpdate
 }) => {
     const [open, setOpen] = useState(false)
     const [editedData, setEditedData] = useState<
