@@ -7,7 +7,7 @@ import './index.css'
 
 // set up apollo client for grapqhl queries
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://patteri-be-patteri-projekti.rahtiapp.fi/graphql',
   cache: new InMemoryCache(),
 });
 
