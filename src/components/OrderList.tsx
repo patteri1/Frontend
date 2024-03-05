@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -15,10 +16,16 @@ interface OrderListProps {
     title?: string
 }
 
-export default function OrderList({ query, orderData, title }: OrderListProps) {
-    const { loading, error, data } = useQuery(query)
+const OrderList: React.FC<OrderListProps> = ({ query, orderData, title }) => {
+    const { loading, error, data, refetch } = useQuery(query)
+
+    useEffect(() => {
+        refetch()
+    }, [refetch])
+
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
+
     return (
         <div style={{ paddingTop: 20 }}>
             <p style={{ fontSize: 20, fontWeight: 'bold' }}>{title}</p>
@@ -67,3 +74,5 @@ export default function OrderList({ query, orderData, title }: OrderListProps) {
         </div>
     )
 }
+
+export default OrderList
