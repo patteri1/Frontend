@@ -1,13 +1,17 @@
+
+
+
 export interface Order {
     orderId: number
-    locationId: number
-    locationName: string
-    datetime: string
+    createdAt: string
     status: string
+    location: Location
+
 }
 
 export interface OrderRow {
     orderId: number
+
     product: string
     amount: number
 }
@@ -34,3 +38,6 @@ export interface PalletType {
 export interface LocationQueryData {
     allLocations: Location[]
 }
+
+ 
+
