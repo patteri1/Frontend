@@ -11,7 +11,7 @@ export interface Order {
 
 export interface OrderRow {
     orderId: number
-
+    palletType: PalletType
     product: string
     amount: number
 }
