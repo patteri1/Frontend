@@ -21,20 +21,25 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 
+ 
 interface StorageCardProps {
-    data: { title: string; content: string }[]
+    data: { title: string; content: string, palletTypeId?: number; locationId?: number }[]
     locationName: string
+    locationId: number
     onUpdate: (updatedData: { title: string; content: string }[]) => void
+    onStorageUpdate: (locationId: number, palletTypeId: number, amount: number) => void;
 }
 
 const StorageCard: React.FC<StorageCardProps> = ({
     data,
+    locationId,
     locationName,
     onUpdate,
+    onStorageUpdate,
 }) => {
     const [open, setOpen] = useState(false)
     const [editedData, setEditedData] =
-        useState<{ title: string; content: string }[]>(data)
+        useState<{ title: string; content: string; palletTypeId?: number}[]>(data)
     const nonNegative = (amount: number) => {
         return Math.max(amount, 0)
     }
@@ -66,16 +71,30 @@ const StorageCard: React.FC<StorageCardProps> = ({
         }
         setEditedData(newData)
     }
+    
+    
     const handleInputChange = (index: number, newValue: string) => {
         const newData = [...editedData]
         newData[index] = { ...newData[index], content: newValue }
         setEditedData(newData)
     }
 
-    const handleSave = () => {
-        onUpdate(editedData)
-        handleClose()
-    }
+
+    const handleSave = async () => {
+        try {
+            for (const StorageData of editedData) {
+                if (StorageData.title !== 'Toimipaikka') {
+                    const palletTypeId = StorageData.palletTypeId || 0; // Replace 0 with a default value or handle accordingly
+                    const amount = parseInt(StorageData.content);
+                    await onStorageUpdate(locationId, palletTypeId, amount);
+                }
+            }
+            onUpdate(editedData);
+            handleClose();
+        } catch (error) {
+            console.error('Error setting amount for PalletType', error);
+        }
+    };
 
     return (
         <Card sx={{ minWidth: 300, marginTop: 10 }}>

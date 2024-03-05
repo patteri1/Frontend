@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import StorageCard from '../components/StorageCard'
 import { useQuery, gql } from '@apollo/client'
 import Page from '../components/Page'
+import { useMutation } from '@apollo/client';
+import {SET_AMOUNT_TO_STORAGE } from '../graphql/mutations';
 
 interface Location {
-    id: string
+    id: number
     name: string
     address: string
     city: string
@@ -13,13 +15,13 @@ interface Location {
     storages: Storage[]
 }
 interface Storage {
-    locationId: string
+    locationId: number
     amount: number
-    palletTypeId: string
+    palletTypeId: number
     palletType: PalletType
 }
 interface PalletType {
-    palletTypeId: string
+    palletTypeId: number
     product: string
     amount: number
 }
@@ -34,72 +36,79 @@ const GET_LOCATIONS = gql`
       address
       price
       storages {
+        locationId
+        palletTypeId
+        amount
         palletType {
           product
-          amount
         }
       }
     }
   }
 `;
-/* postalCode
-city */
-const GET_PALLET_TYPES = gql`
-    query {
-        allPalletTypes {
-            palletTypeId
-            product
-            amount
-        }
-    }
-`
+
+
+
 function StoragePage() {
     const {
         error,
         loading,
         data: locationData,
     } = useQuery<LocationQueryData>(GET_LOCATIONS)
-    const { data: palletTypeData } = useQuery<{ allPalletTypes: PalletType[] }>(
-        GET_PALLET_TYPES
-    )
-
+    
     const [storageCardsData, setStorageCardsData] = useState<
-        { items: { title: string; content: string }[] }[]
+        { items: {title: string; content: string}[] }[]
     >([])
 
-    useEffect(() => {
-        if (locationData && locationData.allLocations && palletTypeData) {
-            const newStorageCardsData = locationData.allLocations.map(
-                (location) => {
-                    const locationItems = [
-                        { title: 'Toimipaikka', content: location.name },
-                        { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
-                        {
-                            title: 'Hinta/lavapaikka/kk',
-                            content: location.price.toString(),
-                        },
-                    ]
-                    const storageItems = location.storages.map((storage) => {
-                        const palletType = storage.palletType
-                        return {
-                            title: palletType && palletType.product ? palletType.product : 'Unknown Product',
-                            content: palletType && palletType.amount ? `${palletType.amount}` : 'Unknown Amount',
-                          };
-                    })
-                    
+    const [locationIds, setLocationIds] = useState<number[]>([])
 
-                    return {
-                        items: [...locationItems, ...storageItems],
-                    }
-                }
-            )
-            setStorageCardsData(newStorageCardsData)
+    const [setAmountToStorage] = useMutation(SET_AMOUNT_TO_STORAGE);
+
+    const setAmountToStorageHandler = async (locationId: number, palletTypeId: number, amount: number) => {
+      try {
+          const { data } = await setAmountToStorage({
+              variables: { locationId, palletTypeId, amount },
+          });
+          console.log('Updated amount for palletType:', data.setAmountToStorage);
+      } catch (error) {
+          console.error('Error setting amount for PalletType', error);
+      }
+  };
+
+    useEffect(() => {
+        if (locationData && locationData.allLocations) {
+          const newStorageCardsData = locationData.allLocations.map(
+            (location) => {
+              const locationItems = [
+                { title: 'Toimipaikka', content: location.name },
+                { title: 'Osoite', content: `${location.address} ` }, //${location.city} ${location.postalCode}
+                {
+                  title: 'Hinta/lavapaikka/kk',
+                  content: location.price.toString(),
+                },
+              ];
+              const storageItems = location.storages.map((storage) => {
+                return {
+                  title: storage.palletType ? storage.palletType.product : 'Unknown Product',
+                  content: storage.amount ? `${storage.amount}` : 'Unknown Amount',
+                  palletTypeId: storage.palletTypeId,
+                  locationId: storage.locationId,  // Add locationId here
+                };
+              });
+              setLocationIds((prevLocationIds) => [...prevLocationIds, location.id]);
+      
+              return {
+                items: [...locationItems, ...storageItems],
+              };
+            }
+          );
+          setStorageCardsData(newStorageCardsData);
         }
-    }, [locationData, palletTypeData])
+      }, [locationData]);
 
     const handleCardUpdate = (
         index: number,
-        updatedData: { title: string; content: string }[]
+        updatedData: { title: string; content: string; palletTypeId?: number  }[]
     ) => {
         const newData = [...storageCardsData]
         newData[index].items = updatedData
@@ -114,20 +123,20 @@ function StoragePage() {
                 ) : error ? (
                     <p>Error: {error.message}</p>
                 ) : (
-                    storageCardsData.map((data, index) => (
-                        <StorageCard
-                            key={index}
-                            data={data.items}
-                            locationName={
-                                data.items.find(
-                                    (item) => item.title === 'Toimipaikka'
-                                )?.content || ''
-                            }
-                            onUpdate={(updatedData) =>
-                                handleCardUpdate(index, updatedData)
-                            }
-                        />
-                    ))
+                  storageCardsData.map((data, index) => (
+                    <StorageCard
+                        key={index}
+                        data={data.items}
+                        locationId={locationIds[index]} // Pass locationId to StorageCard
+                        locationName={
+                            data.items.find((item) => item.title === 'Toimipaikka')?.content || ''
+                        }
+                        onUpdate={(updatedData) => handleCardUpdate(index, updatedData)}
+                        onStorageUpdate={(palletTypeId, amount) =>
+                            setAmountToStorageHandler(locationIds[index], palletTypeId, amount)
+                        }
+                    />
+                ))
                 )}
             </div>
         </Page>
