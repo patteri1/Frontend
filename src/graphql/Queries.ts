@@ -17,9 +17,15 @@ export const GET_LOCATIONS = gql`
       }
     }
   }
-`;
+`
 
-
+export const GET_LOCATIONS_IDS = gql`
+    query GetLocations {
+        allLocations {
+            id
+        }
+    }
+`
 
 export const GET_ORDERS = gql`
     query AllOrders {

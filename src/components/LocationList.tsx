@@ -1,6 +1,7 @@
-import { useQuery, gql } from '@apollo/client'
-import LocationInfo from './LocationInfo'
+import { useQuery } from '@apollo/client'
 import { Box, Paper } from '@mui/material'
+import { GET_LOCATIONS_IDS } from '../graphql/Queries'
+import LocationInfo from './LocationInfo'
 
 // define typescript interface for location
 interface Location {
@@ -9,17 +10,9 @@ interface Location {
 
 // define the grapqhl query for fetching all locations
 // needs to match one in the schema on the
-const GET_LOCATIONS = gql`
-    query GetLocations {
-        allLocations {
-            id
-            name
-        }
-    }
-`
 
 const LocationList = () => {
-    const { loading, error, data } = useQuery(GET_LOCATIONS)
+    const { loading, error, data } = useQuery(GET_LOCATIONS_IDS)
 
     if (loading) return <p>Loading...</p>
     if (error) return (<p>Error : {error.message}</p>)
