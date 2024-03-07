@@ -27,6 +27,20 @@ export const GET_LOCATIONS_IDS = gql`
     }
 `
 
+
+export const GET_LOCATION_BY_ID = gql`
+    query Location($locationId: Int!) {
+        location(id: $locationId) {
+            address
+            city
+            locationType
+            name
+            postCode
+            price
+        }
+    }
+`
+
 export const GET_ORDERS = gql`
     query AllOrders {
         allOrders {

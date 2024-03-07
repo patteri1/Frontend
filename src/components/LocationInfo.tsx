@@ -1,23 +1,11 @@
-import { useQuery, gql } from '@apollo/client'
-import CustomModal from './CustomModal'
+import { useQuery } from '@apollo/client'
 import { useState } from 'react'
+import { GET_LOCATION_BY_ID } from '../graphql/Queries'
+import CustomModal from './CustomModal'
 
 interface LocationInfoProps {
     id: number
 }
-
-const GET_LOCATION_BY_ID = gql`
-    query Location($locationId: Int!) {
-        location(id: $locationId) {
-            address
-            city
-            locationType
-            name
-            postCode
-            price
-        }
-    }
-`
 
 const LocationInfo = ({ id }: LocationInfoProps) => {
     const { loading, error, data } = useQuery(GET_LOCATION_BY_ID, {
