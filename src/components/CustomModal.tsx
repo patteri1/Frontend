@@ -1,16 +1,16 @@
 import { Box, Button, Modal } from '@mui/material'; // Import Box and Button from Material-UI
 
-type Section = {
+interface Section {
     header: string
     content: JSX.Element | JSX.Element[]
 }
 
-type OptionalButton = {
+interface OptionalButton {
     label: string
     onClick: () => void
 }
 
-type CustomModalProps = {
+interface CustomModalProps {
     open: boolean
     hideModal: () => void
     sections: Section[]
