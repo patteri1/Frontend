@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import StorageCard from './StorageCard'
-import { useQuery } from '@apollo/client'
-import { GET_LOCATIONS} from '../graphql/Queries'
+import { useQuery, useMutation } from '@apollo/client'
+import { GET_LOCATIONS } from '../graphql/Queries'
+import { SET_AMOUNT_TO_STORAGE } from '../graphql/mutations'
 import { LocationQueryData } from '../graphql/TypeDefs'
-import { useMutation } from '@apollo/client';
-import {SET_AMOUNT_TO_STORAGE } from '../graphql/mutations';
 
 function StorageList() {
     const {
@@ -12,50 +11,58 @@ function StorageList() {
         loading,
         data: locationData,
     } = useQuery<LocationQueryData>(GET_LOCATIONS)
-
     const [storageCardsData, setStorageCardsData] = useState<
         { items: { title: string; content: string }[] }[]
     >([])
-
     const [locationIds] = useState<number[]>([])
+    const [setAmountToStorage] = useMutation(SET_AMOUNT_TO_STORAGE)
 
-    const [setAmountToStorage] = useMutation(SET_AMOUNT_TO_STORAGE);
-
-    const setAmountToStorageHandler = async (locationId: number, palletTypeId: number, amount: number) => {
+    const setAmountToStorageHandler = async (
+        locationId: number,
+        palletTypeId: number,
+        amount: number
+    ) => {
         try {
             const { data } = await setAmountToStorage({
                 variables: { locationId, palletTypeId, amount },
-            });
-            console.log('Updated amount for palletType:', data.setAmountToStorage);
+            })
+            console.log(
+                'Updated amount for palletType:',
+                data.setAmountToStorage
+            )
         } catch (error) {
-            console.error('Error setting amount for PalletType', error);
+            console.error('Error setting amount for PalletType', error)
         }
-    };
+    }
 
     useEffect(() => {
         if (locationData && locationData.allLocations) {
-          const newStorageCardsData = locationData.allLocations.map((location) => {
-            const locationItems = [
-              { title: 'Toimipaikka', content: location.name },
-              { title: 'Osoite', content: `${location.address} ` },
-              { title: 'Hinta/lavapaikka/kk', content: location.price.toString() },
-            ];
-            const storageItems = location.storages.map((storage) => {
-              return {
-                title: storage.palletType ? storage.palletType.product : 'Unknown Product',
-                content: storage.amount ? `${storage.amount}` : 'Unknown Amount',
-                palletTypeId: storage.palletTypeId,
-                locationId: storage.locationId,
-              };
-            });
-    
-            return {
-              items: [...locationItems, ...storageItems],
-            };
-          });
-          setStorageCardsData(newStorageCardsData);
+            const newStorageCardsData = locationData.allLocations.map(
+                (location) => {
+                    const locationItems = [
+                        { title: 'Toimipaikka', content: location.name },
+                        { title: 'Osoite', content: `${location.address} ` },
+                        {
+                            title: 'Hinta/lavapaikka/kk',
+                            content: location.price.toString(),
+                        },
+                    ]
+                    const storageItems = location.storages.map((storage) => ({
+                        title: storage.palletType
+                            ? storage.palletType.product
+                            : 'Unknown Product',
+                        content: storage.amount
+                            ? `${storage.amount}`
+                            : 'Unknown Amount',
+                        palletTypeId: storage.palletTypeId,
+                        locationId: storage.locationId,
+                    }))
+                    return { items: [...locationItems, ...storageItems] }
+                }
+            )
+            setStorageCardsData(newStorageCardsData)
         }
-    }, [locationData]);
+    }, [locationData])
 
     const handleCardUpdate = (
         index: number,
@@ -87,9 +94,15 @@ function StorageList() {
                             data.items.find((item) => item.title === 'Osoite')
                                 ?.content || ''
                         }
-                        onUpdate={(updatedData) => handleCardUpdate(index, updatedData)}
+                        onUpdate={(updatedData) =>
+                            handleCardUpdate(index, updatedData)
+                        }
                         onStorageUpdate={(palletTypeId, amount) =>
-                            setAmountToStorageHandler(locationIds[index], palletTypeId, amount)
+                            setAmountToStorageHandler(
+                                locationIds[index],
+                                palletTypeId,
+                                amount
+                            )
                         }
                     />
                 ))
