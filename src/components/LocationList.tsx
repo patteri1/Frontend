@@ -8,9 +8,6 @@ interface Location {
     id: number
 }
 
-// define the grapqhl query for fetching all locations
-// needs to match one in the schema on the
-
 const LocationList = () => {
     const { loading, error, data } = useQuery(GET_LOCATIONS_IDS)
 
