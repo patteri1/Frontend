@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client'
 import { useState } from 'react'
 import { GET_LOCATION_BY_ID } from '../graphql/Queries'
 import CustomModal from './CustomModal'
+import EditLocation from './EditLocation'
 
 interface LocationInfoProps {
     id: number
@@ -12,10 +13,13 @@ const LocationInfo = ({ id }: LocationInfoProps) => {
         variables: { locationId: id },
     })
 
+
     const [open, setOpen] = useState<boolean>(false)
+    const [editOpen, setEditOpen] = useState<boolean>(false)
 
     const showModal = () => setOpen(true)
     const hideModal = () => setOpen(false)
+    const hideEdit = () => setEditOpen(false)
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
@@ -36,8 +40,9 @@ const LocationInfo = ({ id }: LocationInfoProps) => {
                 open={open}
                 hideModal={hideModal}
                 sections={modalSections}
-                optionalButton={{ label: 'muokkaa', onClick: () => console.log('button clicked') }}
+                optionalButton={{ label: 'muokkaa', onClick: () => setEditOpen(true) }}
             />
+            <EditLocation location={data.location} open={editOpen} handleClose={hideEdit} />
 
         </div>
     )
