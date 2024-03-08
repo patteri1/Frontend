@@ -31,6 +31,7 @@ export const GET_LOCATIONS_IDS = gql`
 export const GET_LOCATION_BY_ID = gql`
     query Location($locationId: Int!) {
         location(id: $locationId) {
+            id
             address
             city
             locationType
