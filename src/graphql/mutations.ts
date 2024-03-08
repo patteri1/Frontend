@@ -7,3 +7,11 @@ export const SET_AMOUNT_TO_STORAGE = gql`
         amount
     }
 `
+
+export const UPDATE_LOCATION = gql`
+    mutation UpdateLocation($locationId: Int!, $input: LocationInput!) {
+        updateLocation(locationId: $locationId, input: $input) {
+          id
+        }
+    }
+`
