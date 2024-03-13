@@ -89,16 +89,21 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                         )}
                     </TextField>
                     {data.availableStorages.map((row: Storage) => (
-                        <div key={row.palletType.palletTypeId}>
-                            <p>
-                                {row.palletType.product}: {row.amount}
+                        <div
+                            style={{ display: 'flex', gap: 10 }}
+                            key={row.palletType.palletTypeId}
+                        >
+                            <p style={{ width: 180 }}>
+                                {row.palletType.product}: <br />
+                                {row.amount} vapaana
                             </p>
+
                             <TextField
+                                style={{ width: 70 }}
                                 required
                                 margin="dense"
                                 id={`palletType-${row.palletType.palletTypeId}`}
                                 type="number"
-                                fullWidth
                                 value={rows[row.palletType.palletTypeId] || 0}
                                 onChange={(e) => {
                                     setRows((prevRows) => ({
