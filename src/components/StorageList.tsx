@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { GET_LOCATIONS} from '../graphql/Queries'
 import { LocationQueryData } from '../graphql/TypeDefs'
 import { useMutation } from '@apollo/client';
-import {SET_AMOUNT_TO_STORAGE } from '../graphql/mutations';
+import {SET_AMOUNT_TO_STORAGE } from '../graphql/Queries';
 
 function StorageList() {
     const {
