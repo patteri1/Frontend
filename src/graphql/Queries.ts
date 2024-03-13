@@ -108,6 +108,7 @@ export const GET_ORDER_FORM = gql`
         availableStorages {
             amount
             palletType {
+                palletTypeId
                 product
             }
         }

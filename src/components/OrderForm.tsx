@@ -24,10 +24,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
     const { loading, error, data } = useQuery(GET_ORDER_FORM)
 
     const [locationId, setLocationId] = useState<number>(1)
-    const [paristolaatikko, setParistolaatikko] = useState<number>()
-    const [litiumlaatikko, setLitiumlaatikko] = useState<number>()
-    const [lavat, setLavat] = useState<Storage[]>([])
-    const [lava, setLava] = useState<Storage>()
+    const [rows, setRows] = useState<{ [key: number]: string }>([])
+
     const status: string = 'Avattu'
 
     const [addOrder] = useMutation(ADD_ORDER)
@@ -41,10 +39,12 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                     input: {
                         locationId,
                         status,
-                        orderRows: [
-                            { palletTypeId: 1, amount: paristolaatikko },
-                            { palletTypeId: 2, amount: litiumlaatikko },
-                        ],
+                        orderRows: Object.entries(rows).map(
+                            ([palletTypeId, amount]) => ({
+                                palletTypeId: Number(palletTypeId),
+                                amount: Number(amount),
+                            })
+                        ),
                     },
                 },
             })
@@ -77,7 +77,6 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                         fullWidth
                         value={locationId}
                         onChange={(e) => {
-                            console.log(data)
                             setLocationId(Number(e.target.value))
                         }}
                     >
@@ -89,55 +88,28 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                             )
                         )}
                     </TextField>
-                    {data.availableStorages.map(
-                        (row: Storage, index: number) => (
-                            <div key={index}>
-                                <p>
-                                    {row.palletType.product}: {row.amount}
-                                </p>
-                                <TextField
-                                    required
-                                    margin="dense"
-                                    id={`palletType-${index}`}
-                                    type="number"
-                                    fullWidth
-                                    value={row.amount}
-                                    onChange={(e) => {
-                                        const value = e.target.value
-                                        // Assuming you have a function to update the amount in your 'row' object
-                                        updateAmount(index, value) // Pass the index and the new value to the update function
-                                    }}
-                                ></TextField>
-                            </div>
-                        )
-                    )}
-                    {/* <TextField
-                        required
-                        margin="dense"
-                        id="paristolaatikko"
-                        label="Paristolaatikko"
-                        type="number"
-                        value={paristolaatikko}
-                        onChange={(e) => {
-                            const value = e.target.value
-                            setParistolaatikko(
-                                value ? Number(value) : undefined
-                            )
-                        }}
-                    /> */}
-                    {/* <TextField
-                        required
-                        margin="dense"
-                        id="litiumlaatikko"
-                        label="Litiumlaatikko"
-                        type="number"
-                        fullWidth
-                        value={litiumlaatikko}
-                        onChange={(e) => {
-                            const value = e.target.value
-                            setLitiumlaatikko(value ? Number(value) : undefined)
-                        }}
-                    /> */}
+                    {data.availableStorages.map((row: Storage) => (
+                        <div key={row.palletType.palletTypeId}>
+                            <p>
+                                {row.palletType.product}: {row.amount}
+                            </p>
+                            <TextField
+                                required
+                                margin="dense"
+                                id={`palletType-${row.palletType.palletTypeId}`}
+                                type="number"
+                                fullWidth
+                                value={rows[row.palletType.palletTypeId] || 0}
+                                onChange={(e) => {
+                                    setRows((prevRows) => ({
+                                        ...prevRows,
+                                        [row.palletType.palletTypeId]:
+                                            e.target.value,
+                                    }))
+                                }}
+                            ></TextField>
+                        </div>
+                    ))}
                     <DialogActions>
                         <Button onClick={onClose}>Peruuta</Button>
                         <Button type="submit">Tallenna</Button>

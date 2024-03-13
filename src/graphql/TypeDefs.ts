@@ -11,8 +11,9 @@ export interface OrderRow {
     product: string
     amount: number
 }
+
 export interface Location {
-    id: string
+    id: number
     name: string
     address: string
     city: string
@@ -22,13 +23,13 @@ export interface Location {
     storages: Storage[]
 }
 export interface Storage {
-    locationId: string
+    locationId: number
     amount: number
-    palletTypeId: string
+    palletTypeId: number
     palletType: PalletType
 }
 export interface PalletType {
-    palletTypeId: string
+    palletTypeId: number
     product: string
     amount: number
 }
