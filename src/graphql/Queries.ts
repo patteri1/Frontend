@@ -1,27 +1,36 @@
 import { gql } from '@apollo/client'
 
-
 export const GET_LOCATIONS = gql`
-  query {
-    allLocations {
-      name
-      address
-      price
-      storages {
-        locationId
-        palletTypeId
-        amount
-        palletType {
-          product
+    query {
+        allLocations {
+            id
+            name
+            address
+            price
+            locationType
+            storages {
+                locationId
+                palletTypeId
+                amount
+                palletType {
+                    product
+                }
+            }
         }
-      }
     }
-  }
-`;
+`
 
 export const SET_AMOUNT_TO_STORAGE = gql`
-    mutation setAmountToStorage($locationId: Int!, $palletTypeId: Int!, $amount: Int!){
-        setAmountToStorage(locationId: $locationId, palletTypeId: $palletTypeId, amount: $amount)
+    mutation setAmountToStorage(
+        $locationId: Int!
+        $palletTypeId: Int!
+        $amount: Int!
+    ) {
+        setAmountToStorage(
+            locationId: $locationId
+            palletTypeId: $palletTypeId
+            amount: $amount
+        )
         amount
     }
 `
@@ -94,3 +103,17 @@ export const ADD_ORDER = gql`
     }
 `
 
+export const GET_ORDER_FORM = gql`
+    query OrderForm {
+        availableStorages {
+            amount
+            palletType {
+                product
+            }
+        }
+        carrierLocations {
+            id
+            name
+        }
+    }
+`

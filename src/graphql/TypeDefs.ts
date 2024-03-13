@@ -1,12 +1,8 @@
-
-
-
 export interface Order {
     orderId: number
     createdAt: string
     status: string
     location: Location
-
 }
 
 export interface OrderRow {
@@ -22,6 +18,7 @@ export interface Location {
     city: string
     postCode: number
     price: number
+    locationType: string
     storages: Storage[]
 }
 export interface Storage {
@@ -38,6 +35,3 @@ export interface PalletType {
 export interface LocationQueryData {
     allLocations: Location[]
 }
-
- 
-
