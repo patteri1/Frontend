@@ -97,22 +97,24 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                                 {row.palletType.product}: <br />
                                 {row.amount} vapaana
                             </p>
-
                             <TextField
                                 style={{ width: 70 }}
                                 required
                                 margin="dense"
                                 id={`palletType-${row.palletType.palletTypeId}`}
                                 type="number"
-                                value={rows[row.palletType.palletTypeId] || 0}
+                                value={rows[row.palletType.palletTypeId] || ''}
                                 onChange={(e) => {
+                                    const value = parseInt(
+                                        e.target.value,
+                                        10
+                                    ).toString()
                                     setRows((prevRows) => ({
                                         ...prevRows,
-                                        [row.palletType.palletTypeId]:
-                                            e.target.value,
+                                        [row.palletType.palletTypeId]: value,
                                     }))
                                 }}
-                            ></TextField>
+                            />
                         </div>
                     ))}
                     <DialogActions>
