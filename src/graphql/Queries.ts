@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client'
 
+// todo: fix the storages part in backend
+// (only fetch the latest storage row for every product)
 export const GET_LOCATIONS = gql`
     query {
         allLocations {
