@@ -19,18 +19,24 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
     const showModal = () => setOpen(true)
     const hideModal = () => setOpen(false)
 
-    
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
-    
+
     const modalSections = [
         { header: 'Tilaaja', content: <p>{data.order.location.name}</p> },
         { header: 'Tilaustunnus', content: <p>{data.order.orderId}</p> },
-        { header: 'Lavat', content: data.order.orderRows.map((row: OrderRow) => <p>{row.palletType.product} x{row.amount}</p>) },
+        {
+            header: 'Lavat',
+            content: data.order.orderRows.map((row: OrderRow) => (
+                <p>
+                    {row.product.productName} x{row.palletAmount}
+                </p>
+            )),
+        },
         { header: 'Tilattu', content: <p>{data.order.createdAt}</p> },
-        { header: 'Status', content: <p>{data.order.status}</p> }
-    ];
-    
+        { header: 'Status', content: <p>{data.order.status}</p> },
+    ]
+
     return (
         <div>
             <a onClick={showModal}>Näytä</a>
