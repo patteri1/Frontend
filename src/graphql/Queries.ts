@@ -1,28 +1,38 @@
 import { gql } from '@apollo/client'
 
-
 export const GET_LOCATIONS = gql`
-  query {
-    allLocations {
-      name
-      address
-      price
-      storages {
-        locationId
-        palletTypeId
-        amount
-        palletType {
-          product
+    query {
+        allLocations {
+            locationName
+            address
+            postCode
+            city
+            locationType
+            storages {
+                locationId
+                productId
+                palletAmount
+                product {
+                    productName
+                }
+            }
         }
-      }
     }
-  }
-`;
+`
 
+// todo: fix
 export const SET_AMOUNT_TO_STORAGE = gql`
-    mutation setAmountToStorage($locationId: Int!, $palletTypeId: Int!, $amount: Int!){
-        setAmountToStorage(locationId: $locationId, palletTypeId: $palletTypeId, amount: $amount)
-        amount
+    mutation setAmountToStorage(
+        $locationId: Int!
+        $productId: Int!
+        $palletAmount: Int!
+    ) {
+        setAmountToStorage(
+            locationId: $locationId
+            productId: $productId
+            palletAmount: $palletAmount
+        )
+        palletAmount
     }
 `
 
@@ -31,9 +41,10 @@ export const GET_ORDERS = gql`
         allOrders {
             orderId
             createdAt
+            updatedAt
             status
             location {
-                name
+                locationName
             }
         }
     }
@@ -41,17 +52,18 @@ export const GET_ORDERS = gql`
 
 export const GET_ORDER_BY_ID = gql`
     query Order($orderId: Int!) {
-        order(id: $orderId) {
+        order(orderId: $orderId) {
             orderId
             createdAt
+            updatedAt
             status
             location {
-                name
+                locationName
             }
             orderRows {
-                amount
-                palletType {
-                    product
+                palletAmount
+                product {
+                    productName
                 }
             }
         }
@@ -63,9 +75,10 @@ export const GET_OPEN_ORDERS = gql`
         openOrders {
             orderId
             location {
-                name
+                locationName
             }
             createdAt
+            updatedAt
             status
         }
     }
@@ -76,9 +89,10 @@ export const GET_CLOSED_ORDERS = gql`
         closedOrders {
             orderId
             location {
-                name
+                locationName
             }
             createdAt
+            updatedAt
             status
         }
     }
@@ -86,11 +100,12 @@ export const GET_CLOSED_ORDERS = gql`
 export const ADD_ORDER = gql`
     mutation AddOrder($input: AddOrderInput!) {
         addOrder(input: $input) {
+            orderId
             location {
-                id
+                locationId
             }
+            createdAt
             status
         }
     }
 `
-

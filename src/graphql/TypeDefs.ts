@@ -1,43 +1,37 @@
-
-
-
 export interface Order {
     orderId: number
-    createdAt: string
-    status: string
     location: Location
-
+    status: string
+    createdAt: string
+    updatedAt: string
 }
 
 export interface OrderRow {
     orderId: number
-    palletType: PalletType
-    product: string
-    amount: number
+    product: Product
+    //productName: string
+    palletAmount: number
 }
 export interface Location {
-    id: string
-    name: string
+    locationId: string
+    locationName: string
     address: string
-    city: string
     postCode: number
-    price: number
+    city: string
+    locationType: string
     storages: Storage[]
 }
 export interface Storage {
     locationId: string
-    amount: number
-    palletTypeId: string
-    palletType: PalletType
+    palletAmount: number
+    productId: string
+    product: Product
 }
-export interface PalletType {
-    palletTypeId: string
-    product: string
-    amount: number
+export interface Product {
+    productId: string
+    productName: string
+    productAmount: number
 }
 export interface LocationQueryData {
     allLocations: Location[]
 }
-
- 
-

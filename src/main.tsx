@@ -7,14 +7,14 @@ import './index.css'
 
 // set up apollo client for grapqhl queries
 const client = new ApolloClient({
-  uri: 'http://patteri-be-patteri-projekti.rahtiapp.fi/graphql',
-  cache: new InMemoryCache(),
-});
+    uri: 'http://localhost:3000/graphql',
+    cache: new InMemoryCache(),
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
-  </React.StrictMode>,
+    <React.StrictMode>
+        <ApolloProvider client={client}>
+            <App />
+        </ApolloProvider>
+    </React.StrictMode>
 )
