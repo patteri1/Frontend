@@ -1,19 +1,18 @@
 import { useQuery, gql } from '@apollo/client'
-import LocationInfo from './LocationInfo'
-import { Box, Paper } from '@mui/material'
+import { TableRow, TableHead, TableContainer, TableCell, TableBody, Table, IconButton, Button } from '@mui/material'
+import { Location } from '../graphql/TypeDefs'
+import { Delete, Edit } from '@mui/icons-material'
+import Paper from '@mui/material/Paper'
 
-// define typescript interface for location
-interface Location {
-    locationId: number
-}
-
-// define the grapqhl query for fetching all locations
-// needs to match one in the schema on the
 const GET_LOCATIONS = gql`
     query GetLocations {
         allLocations {
             locationId
             locationName
+            address
+            postCode
+            city
+            locationType
         }
     }
 `
@@ -24,16 +23,51 @@ const LocationList = () => {
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
 
+    const handleDeleteButton = (id: number) => {
+        console.log('Delete location by id: ', id)
+    }
+
+    const handleEditButton = (id: number) => {
+        console.log('Edit location by id: ', id)
+    }
+
     return (
-        <Box sx={{ padding: 2, width: 400 }} component={Paper}>
-            <div>
-                {(data.allLocations as Location[]).map(({ locationId }) => (
-                    <div style={{ marginTop: 6 }} key={locationId}>
-                        <LocationInfo locationId={locationId} />
-                    </div>
-                ))}
-            </div>
-        </Box>
+        <div>
+            <TableContainer sx={{ padding: 2 }} component={Paper}>
+                <Table
+                    size="small"
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Yritys</TableCell>
+                            <TableCell>Osoite</TableCell>
+                            <TableCell>Postitoimipaikka</TableCell>
+                            <TableCell>Tyyppi</TableCell>
+                            <TableCell>Toiminnot</TableCell>
+
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.allLocations.map((location: Location) => (
+                            <TableRow key={location.locationId} >
+                                <TableCell>{location.locationName}</TableCell>
+                                <TableCell>{location.address}</TableCell>
+                                <TableCell>{location.postCode}, {location.city}</TableCell>
+                                <TableCell>{location.locationType}</TableCell>
+                                <IconButton color='primary' onClick={() => handleDeleteButton(Number(location.locationId))}>
+                                    <Delete />
+                                </IconButton>
+
+                                <IconButton color='secondary' onClick={() => handleEditButton(Number(location.locationId))}>
+                                    <Edit />
+                                </IconButton>
+                            </TableRow>
+
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
     )
 }
 
