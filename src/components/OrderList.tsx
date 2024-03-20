@@ -55,7 +55,7 @@ const OrderList: React.FC<OrderListProps> = ({ query, orderData, title }) => {
                                 style={{ cursor: 'pointer' }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {row.location.name}
+                                    {row.location.locationName}
                                 </TableCell>
                                 <TableCell align="center">
                                     {row.createdAt}

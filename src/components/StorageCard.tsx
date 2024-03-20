@@ -22,13 +22,21 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 
 interface StorageCardProps {
-    data: { title: string; content: string, palletTypeId?: number; locationId?: number  }[]
+    data: {
+        title: string
+        content: string
+        productId?: number
+        locationId?: number
+    }[]
     locationName: string
     locationId: number
     address: string // Add address to props
-    onUpdate: (updatedData: { title: string; content: string }[]) => void,
-    onStorageUpdate: (locationId: number, palletTypeId: number, amount: number) => void;
-    
+    onUpdate: (updatedData: { title: string; content: string }[]) => void
+    onStorageUpdate: (
+        locationId: number,
+        productId: number,
+        amount: number
+    ) => void
 }
 
 const StorageCard: React.FC<StorageCardProps> = ({

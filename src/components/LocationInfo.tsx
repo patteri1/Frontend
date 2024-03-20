@@ -3,25 +3,24 @@ import CustomModal from './CustomModal'
 import { useState } from 'react'
 
 interface LocationInfoProps {
-    id: number
+    locationId: number
 }
 
 const GET_LOCATION_BY_ID = gql`
     query Location($locationId: Int!) {
-        location(id: $locationId) {
+        location(locationId: $locationId) {
+            locationName
             address
+            postCode
             city
             locationType
-            name
-            postCode
-            price
         }
     }
 `
 
-const LocationInfo = ({ id }: LocationInfoProps) => {
+const LocationInfo = ({ locationId }: LocationInfoProps) => {
     const { loading, error, data } = useQuery(GET_LOCATION_BY_ID, {
-        variables: { locationId: id },
+        variables: { locationId: locationId },
     })
 
     const [open, setOpen] = useState<boolean>(false)
@@ -33,24 +32,35 @@ const LocationInfo = ({ id }: LocationInfoProps) => {
     if (error) return <p>Error : {error.message}</p>
 
     const modalSections = [
-        { header: 'Nimi', content: <p>{data.location.name}</p> },
+        { header: 'Nimi', content: <p>{data.location.locationName}</p> },
         { header: 'Osoite', content: <p>{data.location.address}</p> },
-        { header: 'Kaupunki', content: <p>{data.location.city} {data.location.postCode}</p> },
+        {
+            header: 'Kaupunki',
+            content: (
+                <p>
+                    {data.location.postCode} {data.location.city}
+                </p>
+            ),
+        },
         { header: 'Tyyppi', content: <p>{data.location.locationType}</p> },
-        { header: 'Hinta', content: <p>{data.location.price} €/kk</p> }
+        //{ header: 'Hinta', content: <p>{data.location.price} €/kk</p> },
     ]
 
     return (
         <div>
-            <span style={{ cursor: 'pointer' }} onClick={showModal}>{data.location.name}</ span>
+            <span style={{ cursor: 'pointer' }} onClick={showModal}>
+                {data.location.locationName}
+            </span>
             <br />
             <CustomModal
                 open={open}
                 hideModal={hideModal}
                 sections={modalSections}
-                optionalButton={{ label: 'muokkaa', onClick: () => console.log('button clicked') }}
+                optionalButton={{
+                    label: 'muokkaa',
+                    onClick: () => console.log('button clicked'),
+                }}
             />
-
         </div>
     )
 }
