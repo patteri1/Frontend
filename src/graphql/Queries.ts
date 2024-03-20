@@ -103,6 +103,32 @@ export const ADD_ORDER = gql`
     }
 `
 
+export const COLLECT_ORDER = gql`
+    mutation CollectOrder($orderId: Int!) {
+        collectOrder(id: $orderId) {
+            orderId
+            location {
+                id
+            }
+            createdAt
+            status
+        }
+    }
+`
+
+export const CANCEL_ORDER = gql`
+    mutation CancelOrder($orderId: Int!) {
+        cancelOrder(id: $orderId) {
+            orderId
+            location {
+                id
+            }
+            createdAt
+            status
+        }
+    }
+`
+
 export const GET_ORDER_FORM = gql`
     query OrderForm {
         availableStorages {

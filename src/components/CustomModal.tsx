@@ -1,4 +1,6 @@
-import { Box, Button, Modal } from '@mui/material'; // Import Box and Button from Material-UI
+import { Box, Button, Modal } from '@mui/material' // Import Box and Button from Material-UI
+import { useMutation } from '@apollo/client'
+import { COLLECT_ORDER, CANCEL_ORDER } from '../graphql/Queries'
 
 type Section = {
     header: string
@@ -15,9 +17,42 @@ type CustomModalProps = {
     hideModal: () => void
     sections: Section[]
     optionalButton?: OptionalButton
+    orderId: number
 }
 
-const CustomModal = ({ open, hideModal, sections, optionalButton }: CustomModalProps) => {
+const CustomModal = ({
+    open,
+    hideModal,
+    sections,
+    orderId,
+}: CustomModalProps) => {
+    const [collectOrderMutation] = useMutation(COLLECT_ORDER)
+    const [cancelOrderMutation] = useMutation(CANCEL_ORDER)
+
+    const handleCollectOrder = async () => {
+        try {
+            console.log('Collecting order:', orderId) // Log orderId
+            await collectOrderMutation({
+                variables: { orderId: orderId },
+            })
+            hideModal()
+        } catch (error) {
+            console.error('Error collecting order:', error)
+        }
+    }
+
+    const handleCancelOrder = async () => {
+        try {
+            console.log('Cancelling order:', orderId) // Log orderId
+            await cancelOrderMutation({
+                variables: { orderId: orderId },
+            })
+            hideModal()
+        } catch (error) {
+            console.error('Error cancelling order:', error)
+        }
+    }
+
     return (
         <Modal open={open} onClose={hideModal}>
             <Box sx={styles.box}>
@@ -27,26 +62,31 @@ const CustomModal = ({ open, hideModal, sections, optionalButton }: CustomModalP
                         {section.content}
                     </div>
                 ))}
-                {optionalButton && (
-                    <Button
-                        style={{ marginTop: '10px', float: 'right' }}
-                        onClick={optionalButton.onClick}
-                        variant="contained"
-                    >
-                        {optionalButton.label}
-                    </Button>
-                )}
+                <Button
+                    style={{ marginTop: '10px', float: 'right' }}
+                    onClick={handleCollectOrder}
+                    variant="contained"
+                >
+                    Nouda
+                </Button>
+                <Button
+                    style={{ marginTop: '10px', float: 'right' }}
+                    onClick={handleCancelOrder}
+                    variant="contained"
+                >
+                    Peru
+                </Button>
                 <Button
                     style={{ marginTop: '10px', float: 'right' }}
                     onClick={hideModal}
                     variant="contained"
                 >
-                    Takaisin
+                    Sulje
                 </Button>
             </Box>
         </Modal>
-    );
-};
+    )
+}
 
 // move to separate styles component
 const styles = {
