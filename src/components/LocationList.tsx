@@ -3,22 +3,11 @@ import { TableRow, TableHead, TableContainer, TableCell, TableBody, Table, IconB
 import { Location } from '../graphql/TypeDefs'
 import { Delete, Edit } from '@mui/icons-material'
 import Paper from '@mui/material/Paper'
+import { GET_LOCATIONS_WITH_PRICE } from '../graphql/Queries'
 
-const GET_LOCATIONS = gql`
-    query GetLocations {
-        allLocations {
-            locationId
-            locationName
-            address
-            postCode
-            city
-            locationType
-        }
-    }
-`
 
 const LocationList = () => {
-    const { loading, error, data } = useQuery(GET_LOCATIONS)
+    const { loading, error, data } = useQuery(GET_LOCATIONS_WITH_PRICE)
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
@@ -43,24 +32,28 @@ const LocationList = () => {
                             <TableCell>Osoite</TableCell>
                             <TableCell>Postitoimipaikka</TableCell>
                             <TableCell>Tyyppi</TableCell>
+                            <TableCell>Lavapaikan hinta</TableCell>
                             <TableCell>Toiminnot</TableCell>
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.allLocations.map((location: Location) => (
+                        {data.allLocationsWithPrice.map((location: Location) => (
                             <TableRow key={location.locationId} >
                                 <TableCell>{location.locationName}</TableCell>
                                 <TableCell>{location.address}</TableCell>
                                 <TableCell>{location.postCode}, {location.city}</TableCell>
                                 <TableCell>{location.locationType}</TableCell>
-                                <IconButton color='primary' onClick={() => handleDeleteButton(Number(location.locationId))}>
-                                    <Delete />
-                                </IconButton>
+                                <TableCell>{location.locationPrices![0].price}€</TableCell>
+                                <TableCell>
+                                    <IconButton color='primary' onClick={() => handleDeleteButton(Number(location.locationId))}>
+                                        <Delete />
+                                    </IconButton>
 
-                                <IconButton color='secondary' onClick={() => handleEditButton(Number(location.locationId))}>
-                                    <Edit />
-                                </IconButton>
+                                    <IconButton color='secondary' onClick={() => handleEditButton(Number(location.locationId))}>
+                                        <Edit />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
 
                         ))}
