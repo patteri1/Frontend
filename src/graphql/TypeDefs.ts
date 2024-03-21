@@ -20,6 +20,7 @@ export interface Location {
     city: string
     locationType: string
     storages: Storage[]
+    locationPrices?: {'price': number, 'validFrom': Date}[]
 }
 export interface Storage {
     locationId: string
