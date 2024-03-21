@@ -22,6 +22,24 @@ export const GET_LOCATIONS = gql`
     }
 `
 
+
+export const GET_LOCATIONS_WITH_PRICE = gql`
+    query {
+        allLocationsWithPrice {
+            locationId
+            locationName
+            address
+            postCode
+            city
+            locationType
+            locationPrices {
+                price
+                validFrom
+            }
+        }
+    }
+`
+
 // todo: fix
 export const SET_AMOUNT_TO_STORAGE = gql`
     mutation setAmountToStorage(
