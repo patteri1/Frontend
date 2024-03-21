@@ -1,19 +1,29 @@
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, gql, useMutation } from '@apollo/client'
 import { TableRow, TableHead, TableContainer, TableCell, TableBody, Table, IconButton, Button } from '@mui/material'
 import { Location } from '../graphql/TypeDefs'
 import { Delete, Edit } from '@mui/icons-material'
 import Paper from '@mui/material/Paper'
 import { GET_LOCATIONS_WITH_PRICE } from '../graphql/Queries'
+import { DELETE_LOCATION } from '../graphql/Mutations'
 
 
 const LocationList = () => {
     const { loading, error, data } = useQuery(GET_LOCATIONS_WITH_PRICE)
+    const [deleteLocation] = useMutation(DELETE_LOCATION, {
+        refetchQueries: [{ query: GET_LOCATIONS_WITH_PRICE }]
+    })
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error : {error.message}</p>
 
     const handleDeleteButton = (id: number) => {
-        console.log('Delete location by id: ', id)
+        if (window.confirm('Are you sure you want to delete the location?')) {
+            deleteLocation({
+                variables: {
+                    deleteLocationId: id
+                }
+            })
+        }
     }
 
     const handleEditButton = (id: number) => {
