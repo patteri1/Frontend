@@ -13,7 +13,7 @@ export interface OrderRow {
     palletAmount: number
 }
 export interface Location {
-    locationId: string
+    locationId: number
     locationName: string
     address: string
     postCode: number
@@ -22,13 +22,13 @@ export interface Location {
     storages: Storage[]
 }
 export interface Storage {
-    locationId: string
+    locationId: number
     palletAmount: number
     productId: string
     product: Product
 }
 export interface Product {
-    productId: string
+    productId: number
     productName: string
     productAmount: number
 }
