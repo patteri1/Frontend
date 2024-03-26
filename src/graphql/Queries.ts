@@ -140,16 +140,16 @@ export const CANCEL_ORDER = gql`
 
 export const GET_ORDER_FORM = gql`
     query OrderForm {
+        carrierLocations {
+            locationId
+            locationName
+        }
         availableStorages {
-            amount
+            palletAmount
             product {
                 productId
                 productName
             }
-        }
-        carrierLocations {
-            locationId
-            locationName
         }
     }
 `

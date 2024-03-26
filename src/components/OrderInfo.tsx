@@ -6,12 +6,12 @@ import { OrderRow } from '../graphql/TypeDefs'
 import CustomModal from './CustomModal'
 
 interface OrderInfoProps {
-    id: number
+    orderId: number
 }
 
-const OrderInfo = ({ id }: OrderInfoProps) => {
+const OrderInfo = ({ orderId }: OrderInfoProps) => {
     const { loading, error, data } = useQuery(GET_ORDER_BY_ID, {
-        variables: { orderId: id },
+        variables: { orderId: orderId },
     })
 
     const [open, setOpen] = useState<boolean>(false)

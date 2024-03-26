@@ -64,7 +64,7 @@ const OrderList: React.FC<OrderListProps> = ({ query, orderData, title }) => {
                                     {row.status}
                                 </TableCell>
                                 <TableCell>
-                                    <OrderInfo id={row.orderId} />
+                                    <OrderInfo orderId={row.orderId} />
                                 </TableCell>
                             </TableRow>
                         ))}

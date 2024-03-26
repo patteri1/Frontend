@@ -16,8 +16,8 @@ interface OrderFormProps {
 }
 
 interface Location {
-    id: string
-    name: string
+    locationId: string
+    locationName: string
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
@@ -40,9 +40,9 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                         locationId,
                         status,
                         orderRows: Object.entries(rows).map(
-                            ([palletTypeId, amount]) => ({
-                                palletTypeId: Number(palletTypeId),
-                                amount: Number(amount),
+                            ([productId, palletAmount]) => ({
+                                productId: Number(productId),
+                                palletAmount: Number(palletAmount),
                             })
                         ),
                     },
@@ -81,9 +81,9 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                         }}
                     >
                         {(data.carrierLocations as Location[]).map(
-                            ({ id, name }) => (
-                                <MenuItem key={id} value={id}>
-                                    {name}
+                            ({ locationId, locationName }) => (
+                                <MenuItem key={locationId} value={locationId}>
+                                    {locationName}
                                 </MenuItem>
                             )
                         )}
@@ -91,19 +91,19 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                     {data.availableStorages.map((row: Storage) => (
                         <div
                             style={{ display: 'flex', gap: 10 }}
-                            key={row.palletType.palletTypeId}
+                            key={row.product.productId}
                         >
                             <p style={{ width: 180 }}>
-                                {row.palletType.product}: <br />
-                                {row.amount} vapaana
+                                {row.product.productName}: <br />
+                                {row.palletAmount} vapaana
                             </p>
                             <TextField
                                 style={{ width: 70 }}
                                 required
                                 margin="dense"
-                                id={`palletType-${row.palletType.palletTypeId}`}
+                                id={`product-${row.product.productId}`}
                                 type="number"
-                                value={rows[row.palletType.palletTypeId] || ''}
+                                value={rows[row.product.productId] || ''}
                                 onChange={(e) => {
                                     const value = parseInt(
                                         e.target.value,
@@ -111,7 +111,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                                     ).toString()
                                     setRows((prevRows) => ({
                                         ...prevRows,
-                                        [row.palletType.palletTypeId]: value,
+                                        [row.product.productId]: value,
                                     }))
                                 }}
                             />
