@@ -6,19 +6,27 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
 import MenuItem from '@mui/material/MenuItem'
-import { useMutation } from '@apollo/client'
-import { ADD_ORDER } from '../graphql/Queries'
+import { useQuery, useMutation } from '@apollo/client'
+import { ADD_ORDER, GET_ORDER_FORM } from '../graphql/Queries'
+import { Storage } from '../graphql/TypeDefs'
 
 interface OrderFormProps {
     onClose: () => void
     onOrderSuccess: () => void
 }
 
+interface Location {
+    id: string
+    name: string
+}
+
 const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
+    const { loading, error, data } = useQuery(GET_ORDER_FORM)
+
     const [locationId, setLocationId] = useState<number>(1)
-    const [paristolaatikko, setParistolaatikko] = useState<number>()
-    const [litiumlaatikko, setLitiumlaatikko] = useState<number>()
-    const [status, setStatus] = useState<string>('Avattu')
+    const [rows, setRows] = useState<{ [key: number]: string }>([])
+
+    const status: string = 'Avattu'
 
     const [addOrder] = useMutation(ADD_ORDER)
 
@@ -31,10 +39,12 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                     input: {
                         locationId,
                         status,
-                        orderRows: [
-                            { palletTypeId: 1, amount: paristolaatikko },
-                            { palletTypeId: 2, amount: litiumlaatikko },
-                        ],
+                        orderRows: Object.entries(rows).map(
+                            ([palletTypeId, amount]) => ({
+                                palletTypeId: Number(palletTypeId),
+                                amount: Number(amount),
+                            })
+                        ),
                     },
                 },
             })
@@ -45,6 +55,12 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
         } catch (error) {
             console.error('Error adding order:', error)
         }
+    }
+
+    if (loading) return <p>Loading...</p>
+    if (error) {
+        console.log(error)
+        return <p>Error : {error.message}</p>
     }
 
     return (
@@ -60,59 +76,47 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onOrderSuccess }) => {
                         label="Tilaaja"
                         fullWidth
                         value={locationId}
-                        onChange={(e) => setLocationId(Number(e.target.value))}
-                    >
-                        {[1, 2, 3].map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <TextField
-                        required
-                        margin="dense"
-                        id="paristolaatikko"
-                        label="Paristolaatikko"
-                        type="number"
-                        fullWidth
-                        value={paristolaatikko}
                         onChange={(e) => {
-                            const value = e.target.value
-                            setParistolaatikko(
-                                value ? Number(value) : undefined
+                            setLocationId(Number(e.target.value))
+                        }}
+                    >
+                        {(data.carrierLocations as Location[]).map(
+                            ({ id, name }) => (
+                                <MenuItem key={id} value={id}>
+                                    {name}
+                                </MenuItem>
                             )
-                        }}
-                    />
-                    <TextField
-                        required
-                        margin="dense"
-                        id="litiumlaatikko"
-                        label="Litiumlaatikko"
-                        type="number"
-                        fullWidth
-                        value={litiumlaatikko}
-                        onChange={(e) => {
-                            const value = e.target.value
-                            setLitiumlaatikko(value ? Number(value) : undefined)
-                        }}
-                    />
-
-                    <TextField
-                        select
-                        required
-                        margin="dense"
-                        id="status"
-                        label="Status"
-                        fullWidth
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                    >
-                        {['Avattu', 'Noudettu'].map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
+                        )}
                     </TextField>
+                    {data.availableStorages.map((row: Storage) => (
+                        <div
+                            style={{ display: 'flex', gap: 10 }}
+                            key={row.palletType.palletTypeId}
+                        >
+                            <p style={{ width: 180 }}>
+                                {row.palletType.product}: <br />
+                                {row.amount} vapaana
+                            </p>
+                            <TextField
+                                style={{ width: 70 }}
+                                required
+                                margin="dense"
+                                id={`palletType-${row.palletType.palletTypeId}`}
+                                type="number"
+                                value={rows[row.palletType.palletTypeId] || ''}
+                                onChange={(e) => {
+                                    const value = parseInt(
+                                        e.target.value,
+                                        10
+                                    ).toString()
+                                    setRows((prevRows) => ({
+                                        ...prevRows,
+                                        [row.palletType.palletTypeId]: value,
+                                    }))
+                                }}
+                            />
+                        </div>
+                    ))}
                     <DialogActions>
                         <Button onClick={onClose}>Peruuta</Button>
                         <Button type="submit">Tallenna</Button>

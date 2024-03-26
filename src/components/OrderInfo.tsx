@@ -23,7 +23,10 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
     if (error) return <p>Error : {error.message}</p>
 
     const modalSections = [
-        { header: 'Tilaaja', content: <p>{data.order.location.name}</p> },
+        {
+            header: 'Tilaaja',
+            content: <p>{data.order.location.locationName}</p>,
+        },
         { header: 'Tilaustunnus', content: <p>{data.order.orderId}</p> },
         {
             header: 'Lavat',
@@ -41,6 +44,7 @@ const OrderInfo = ({ id }: OrderInfoProps) => {
         <div>
             <a onClick={showModal}>Näytä</a>
             <CustomModal
+                orderId={data.order.orderId}
                 open={open}
                 hideModal={hideModal}
                 sections={modalSections}

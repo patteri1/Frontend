@@ -111,3 +111,45 @@ export const ADD_ORDER = gql`
         }
     }
 `
+
+export const COLLECT_ORDER = gql`
+    mutation CollectOrder($orderId: Int!) {
+        collectOrder(orderId: $orderId) {
+            orderId
+            location {
+                locationId
+            }
+            createdAt
+            status
+        }
+    }
+`
+
+export const CANCEL_ORDER = gql`
+    mutation CancelOrder($orderId: Int!) {
+        cancelOrder(orderId: $orderId) {
+            orderId
+            location {
+                locationId
+            }
+            createdAt
+            status
+        }
+    }
+`
+
+export const GET_ORDER_FORM = gql`
+    query OrderForm {
+        availableStorages {
+            amount
+            product {
+                productId
+                productName
+            }
+        }
+        carrierLocations {
+            locationId
+            locationName
+        }
+    }
+`

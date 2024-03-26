@@ -12,6 +12,7 @@ export interface OrderRow {
     //productName: string
     palletAmount: number
 }
+
 export interface Location {
     locationId: number
     locationName: string
@@ -21,6 +22,7 @@ export interface Location {
     locationType: string
     storages: Storage[]
 }
+
 export interface Storage {
     locationId: number
     palletAmount: number
@@ -32,6 +34,7 @@ export interface Product {
     productName: string
     productAmount: number
 }
+
 export interface LocationQueryData {
     allLocations: Location[]
 }
