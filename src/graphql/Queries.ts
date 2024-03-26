@@ -22,6 +22,18 @@ export const GET_LOCATIONS = gql`
     }
 `
 
+export const GET_LOCATION_BY_ID = gql`
+    query Location($locationId: Int!) {
+        location(locationId: $locationId) {
+            locationId
+            locationName
+            address
+            postCode
+            city
+        }
+    }
+`
+
 // todo: fix
 export const SET_AMOUNT_TO_STORAGE = gql`
     mutation setAmountToStorage(

@@ -5,6 +5,7 @@ import SignInPage from './pages/SignInPage'
 import StoragePage from './pages/StoragePage'
 import OrderPage from './pages/OrderPage'
 import ManagementPage from './pages/ManagementPage'
+import ReportPage from './pages/ReportPage'
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     {
         path: '/hallinnointi',
         element: <ManagementPage />,
+    },
+    {
+        path: '/raportit',
+        element: <ReportPage />,
     },
 ])
 

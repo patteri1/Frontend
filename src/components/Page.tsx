@@ -80,6 +80,14 @@ function Page(props: PageProps) {
                             >
                                 Hallinnointi
                             </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleClose()
+                                    setPage(3)
+                                }}
+                            >
+                                Raportit
+                            </MenuItem>
                         </Menu>
                     </div>
                 ) : (
@@ -126,6 +134,18 @@ function Page(props: PageProps) {
                             to="/hallinnointi"
                         >
                             Hallinnointi
+                        </Link>
+                        <Link
+                            style={{
+                                marginTop: 2,
+                                color: 'white',
+                                padding: 10,
+                                fontWeight: 'normal',
+                                opacity: path === '/raportit' ? 0.4 : 1,
+                            }}
+                            to="/raportit"
+                        >
+                            Raportit
                         </Link>
                     </Tabs>
                 )}
