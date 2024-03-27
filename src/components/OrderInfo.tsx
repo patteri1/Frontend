@@ -44,7 +44,7 @@ const OrderInfo = ({ orderId }: OrderInfoProps) => {
         <div>
             <a onClick={showModal}>Näytä</a>
             <CustomModal
-                orderId={data.order.orderId}
+                order={data.order}
                 open={open}
                 hideModal={hideModal}
                 sections={modalSections}

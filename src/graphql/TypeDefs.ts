@@ -4,6 +4,7 @@ export interface Order {
     status: string
     createdAt: string
     updatedAt: string
+    orderRows: OrderRow[]
 }
 
 export interface OrderRow {

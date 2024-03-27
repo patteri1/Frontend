@@ -1,6 +1,7 @@
 import { Box, Button, Modal } from '@mui/material' // Import Box and Button from Material-UI
 import { useMutation } from '@apollo/client'
 import { COLLECT_ORDER, CANCEL_ORDER } from '../graphql/Queries'
+import { Order } from '../graphql/TypeDefs'
 
 type Section = {
     header: string
@@ -17,23 +18,23 @@ type CustomModalProps = {
     hideModal: () => void
     sections: Section[]
     optionalButton?: OptionalButton
-    orderId: number
+    order: Order
 }
 
 const CustomModal = ({
     open,
     hideModal,
     sections,
-    orderId,
+    order,
 }: CustomModalProps) => {
     const [collectOrderMutation] = useMutation(COLLECT_ORDER)
     const [cancelOrderMutation] = useMutation(CANCEL_ORDER)
 
     const handleCollectOrder = async () => {
         try {
-            console.log('Collecting order:', orderId) // Log orderId
+            console.log('Collecting order:', order.orderId) // Log orderId
             await collectOrderMutation({
-                variables: { orderId: orderId },
+                variables: { orderId: order.orderId },
             })
             hideModal()
         } catch (error) {
@@ -43,9 +44,9 @@ const CustomModal = ({
 
     const handleCancelOrder = async () => {
         try {
-            console.log('Cancelling order:', orderId) // Log orderId
+            console.log('Cancelling order:', order.orderId) // Log orderId
             await cancelOrderMutation({
-                variables: { orderId: orderId },
+                variables: { orderId: order.orderId },
             })
             hideModal()
         } catch (error) {

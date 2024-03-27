@@ -113,7 +113,21 @@ export const ADD_ORDER = gql`
 `
 
 export const COLLECT_ORDER = gql`
-    mutation CollectOrder($orderId: Int!) {
+    mutation CollectOrder(
+        $orderId: Int!
+        $storageInput: StorageInput!
+        $storageInput2: StorageInput!
+    ) {
+        add: addPallets(storageInput: $storageInput) {
+            productId
+            palletAmount
+            locationId
+        }
+        reduce: addPallets(storageInput: $storageInput2) {
+            productId
+            palletAmount
+            locationId
+        }
         collectOrder(orderId: $orderId) {
             orderId
             location {
