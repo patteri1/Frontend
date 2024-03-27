@@ -21,6 +21,26 @@ type CustomModalProps = {
     order: Order
 }
 
+const storageInputAdd = {
+    storageRows: [
+        {
+            locationId: 1,
+            productId: 1,
+            palletAmount: 7,
+        },
+    ],
+}
+
+const storageInputReduce = {
+    storageRows: [
+        {
+            locationId: 3,
+            productId: 1,
+            palletAmount: -7,
+        },
+    ],
+}
+
 const CustomModal = ({
     open,
     hideModal,
@@ -34,7 +54,11 @@ const CustomModal = ({
         try {
             console.log('Collecting order:', order.orderId) // Log orderId
             await collectOrderMutation({
-                variables: { orderId: order.orderId },
+                variables: {
+                    orderId: order.orderId,
+                    storageInputAdd,
+                    storageInputReduce,
+                },
             })
             hideModal()
         } catch (error) {
